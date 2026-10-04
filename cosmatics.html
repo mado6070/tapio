@@ -9,7 +9,7 @@
     <!-- Google Fonts (Cairo) -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     
-    <!-- Firebase SDKs -->
+    <!-- Firebase SDKs (Compat) -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
@@ -120,14 +120,14 @@
                 <button onclick="saveAdminSettings()" class="w-full bg-pink-600 text-white text-xs py-2.5 rounded-xl font-bold cursor-pointer">حفظ الرقم 💾</button>
             </div>
 
-            <!-- إضافة منتج تجميل جديد سحابياً -->
+            <!-- إضافة مستحضر أو عطر جديد سحابياً -->
             <div class="glam-card p-4 rounded-2xl space-y-3">
-                <h4 class="font-bold text-pink-400 text-xs">➕ إضافة مستحضر أو عطر جديد:</h4>
+                <h4 class="font-bold text-pink-400 text-xs">➕ إضافة مستحضر أو عطر جديد سحابياً:</h4>
                 <input type="text" id="p-name" placeholder="اسم المنتج (مثال: روج مات ثابت)..." class="w-full bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white">
                 <input type="text" id="p-cat" value="مكياج 💄" class="w-full bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white">
                 <input type="number" id="p-price" placeholder="السعر (ج.م)..." class="w-full bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white">
                 <input type="text" id="p-img" placeholder="رابط صورة المنتج (URL)..." class="w-full bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white">
-                <button onclick="addNewProductCloud()" class="w-full bg-pink-600 text-white text-xs py-2.5 rounded-xl font-bold cursor-pointer">نشر المنتج للمتجر 🚀</button>
+                <button onclick="addNewProductCloud()" class="w-full bg-pink-600 text-white text-xs py-2.5 rounded-xl font-bold cursor-pointer">نشر المنتج سحابياً 🚀</button>
             </div>
 
             <!-- أوردرات العملاء الواردة سحابياً باللحظة -->
@@ -150,16 +150,17 @@
         </div>
     </div>
 
-    <!-- الكود البرمجي وسماحية الفايربيس السحابية -->
+    <!-- الكود البرمجي وربط فايربيس الحقيقي الخاص بك -->
     <script>
-        // ⚡ بيانات فايربيس السحابية:
+        // ⚡ كود مشروعك الحقيقي على Firebase:
         const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_PROJECT_ID.appspot.com",
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "YOUR_APP_ID"
+            apiKey: "AIzaSyBto4nftVX8UMvQryZhzorylZIM2bsBoTU",
+            authDomain: "cosmatics-f40f4.firebaseapp.com",
+            projectId: "cosmatics-f40f4",
+            storageBucket: "cosmatics-f40f4.firebasestorage.app",
+            messagingSenderId: "455233360326",
+            appId: "1:455233360326:web:940d4db9d7a7d42b40a2c7",
+            measurementId: "G-G4Y4ELFYQ6"
         };
 
         if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
@@ -168,14 +169,14 @@
         let adminWhatsApp = localStorage.getItem('glam_whatsapp') || "201000000000";
         let cart = [];
         let currentCategory = "الكل";
+        let products = [];
+
         let defaultProducts = [
             { id: 1, name: "عطر شانيل الفاخر 100مل", price: 650, category: "عطور فخمة 🌸", image: "https://images.unsplash.com/photo-1523293182086-7651a899d37f?w=500" },
             { id: 2, name: "مجموعة روج سائل ثابت مات", price: 250, category: "مكياج 💄", image: "https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=500" },
             { id: 3, name: "بالت إيشادو عيون براق", price: 340, category: "مكياج 💄", image: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=500" },
             { id: 4, name: "سيروم العناية بالبشرة فيتامين C", price: 290, category: "عناية بالبشرة ✨", image: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=500" }
         ];
-
-        let products = defaultProducts;
 
         let logoClicks = 0;
         function handleLogoClick() {
@@ -199,6 +200,30 @@
 
         function closeAdminDashboard() { document.getElementById('admin-dashboard').classList.add('hidden'); }
 
+        // استدعاء المنتجات سحابياً باللحظة
+        function loadProductsRealtime() {
+            db.collection("cosmetic_products").onSnapshot(snapshot => {
+                if(snapshot.empty) {
+                    // لو القاعدة فاضية لأول مرة، نرفع المنتجات الافتراضية سحابياً
+                    defaultProducts.forEach(p => {
+                        db.collection("cosmetic_products").doc(p.id.toString()).set(p);
+                    });
+                    return;
+                }
+                products = [];
+                snapshot.forEach(doc => {
+                    products.push(doc.data());
+                });
+                renderCategories();
+                renderProducts();
+            }, error => {
+                console.log("خطأ في جلب المنتجات: ", error);
+                products = defaultProducts;
+                renderCategories();
+                renderProducts();
+            });
+        }
+
         function renderCategories() {
             let bar = document.getElementById('categories-bar');
             let cats = ["الكل"];
@@ -217,7 +242,7 @@
             grid.innerHTML = "";
             let filtered = products.filter(p => currentCategory === "الكل" || p.category === currentCategory);
             
-            filtered.forEach((p, idx) => {
+            filtered.forEach((p) => {
                 grid.innerHTML += `
                     <div class="glam-card p-3 rounded-3xl flex flex-col justify-between space-y-2 shadow">
                         <img src="${p.image}" class="w-full h-28 object-cover rounded-2xl border border-purple-950">
@@ -226,15 +251,15 @@
                             <h4 class="font-bold text-white text-xs mt-1 line-clamp-1">${p.name}</h4>
                             <span class="text-pink-400 font-black text-xs">${p.price} ج.م</span>
                         </div>
-                        <button onclick="addToCart(${p.id})" class="w-full bg-pink-600 hover:bg-pink-500 text-white py-2 rounded-xl text-xs font-bold cursor-pointer">إضافة للسلة 🛍️</button>
+                        <button onclick="addToCart('${p.id}')" class="w-full bg-pink-600 hover:bg-pink-500 text-white py-2 rounded-xl text-xs font-bold cursor-pointer">إضافة للسلة 🛍️</button>
                     </div>
                 `;
             });
         }
 
         function addToCart(id) {
-            let p = products.find(item => item.id === id);
-            let item = cart.find(i => i.id === id);
+            let p = products.find(item => item.id == id);
+            let item = cart.find(i => i.id == id);
             if(item) { item.qty++; } else { cart.push({ ...p, qty: 1 }); }
             renderCart();
         }
@@ -284,7 +309,6 @@
             let total = cart.reduce((s, i) => s + (i.price * i.qty), 0);
 
             try {
-                // حفظ الأوردر سحابياً في قاعدة البيانات
                 await db.collection("cosmetic_orders").add({
                     orderId: orderId,
                     name: name,
@@ -309,7 +333,7 @@
             }
         }
 
-        // لوحة متابعة الأوردرات سحابياً باللحظة للمحل
+        // مراقبة الأوردرات سحابياً باللحظة (Real-time)
         function loadCloudOrdersRealtime() {
             let list = document.getElementById('cloud-orders-list');
             db.collection("cosmetic_orders").orderBy("createdAt", "desc").onSnapshot(snapshot => {
@@ -320,7 +344,7 @@
                 list.innerHTML = "";
                 snapshot.forEach(doc => {
                     let o = doc.data();
-                    let itemsStr = o.items.map(i => `• ${i.name} (عدد ${i.qty})`).join('<br>');
+                    let itemsStr = o.items ? o.items.map(i => `• ${i.name} (عدد ${i.qty})`).join('<br>') : '';
                     list.innerHTML += `
                         <div class="glam-card p-3 rounded-xl text-xs space-y-1.5 border border-pink-500/30">
                             <div class="flex justify-between font-bold text-pink-400"><span>${o.orderId} - ${o.name}</span><span>${o.total} ج.م</span></div>
@@ -333,18 +357,27 @@
             });
         }
 
+        // إضافة منتج جديد ونشره سحابياً لكل الأجهزة
         async function addNewProductCloud() {
             let name = document.getElementById('p-name').value.trim();
             let cat = document.getElementById('p-cat').value.trim();
             let price = parseFloat(document.getElementById('p-price').value);
             let img = document.getElementById('p-img').value.trim() || "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=500";
 
-            if(!name || isNaN(price)) { alert("أدخل اسم المنتج والسعر صحيح!"); return; }
+            if(!name || isNaN(price)) { alert("أدخل اسم المنتج والسعر بشكل صحيح!"); return; }
 
-            products.push({ id: Date.now(), name, category: cat, price, image: img });
-            renderCategories();
-            renderProducts();
-            alert("تم إضافة المنتج للمتجر بنجاح! ✨");
+            let newId = Date.now().toString();
+            let newProd = { id: newId, name, category: cat, price, image: img };
+
+            try {
+                await db.collection("cosmetic_products").doc(newId).set(newProd);
+                alert("تم نشر المنتج سحابياً على كل الأجهزة بنجاح! ✨");
+                document.getElementById('p-name').value = "";
+                document.getElementById('p-price').value = "";
+                document.getElementById('p-img').value = "";
+            } catch (error) {
+                alert("خطأ أثناء النشر بالسحابة: " + error.message);
+            }
         }
 
         function saveAdminSettings() {
@@ -353,8 +386,8 @@
             alert("تم حفظ رقم الواتساب بنجاح! 💾");
         }
 
-        renderCategories();
-        renderProducts();
+        // تشغيل التحميل السحابي عند فتح الصفحة
+        loadProductsRealtime();
         renderCart();
     </script>
 </body>
