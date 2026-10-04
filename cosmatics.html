@@ -42,15 +42,19 @@
                     <p class="text-[9px] text-zinc-400 font-semibold tracking-widest uppercase">Makeup & Accessories</p>
                 </div>
             </div>
-            <div class="flex items-center gap-1.5">
-                <span class="bg-white/10 border border-white/20 text-zinc-200 text-[10px] px-2.5 py-1.5 rounded-xl font-bold">أصلي 100% ✨</span>
+            
+            <!-- أزرار المفضلة والسلة الهيدر -->
+            <div class="flex items-center gap-2">
+                <button onclick="toggleWishlistModal()" class="bg-white/10 border border-white/20 text-white p-2 rounded-xl relative hover:bg-white/20 transition cursor-pointer" title="المفضلة">
+                    ❤️ <span id="wishlist-header-count" class="absolute -top-1 -right-1 bg-white text-black text-[9px] font-black px-1.5 py-0.2 rounded-full">0</span>
+                </button>
             </div>
         </div>
     </header>
 
     <!-- زرار السلة الجانبي العائم -->
     <button onclick="toggleCartModal()" class="fixed left-4 bottom-24 z-45 bg-white text-black p-4 rounded-full shadow-2xl flex items-center gap-2 cursor-pointer hover:bg-zinc-200 transition font-black">
-        <span class="text-xl">🛍️️</span>
+        <span class="text-xl">🛍</span>
         <span id="floating-cart-count" class="bg-black text-white text-xs font-black px-2 py-0.5 rounded-full">0</span>
     </button>
 
@@ -70,6 +74,11 @@
             </button>
         </div>
 
+        <!-- شريط البحث الفوري (Live Search) -->
+        <div class="relative">
+            <input type="text" id="live-search-input" oninput="handleSearch(this.value)" placeholder="🔍 ابحثي عن أي عطر أو منتج مكياج..." class="w-full bg-black/70 border border-white/15 rounded-2xl p-3.5 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-white transition">
+        </div>
+
         <!-- أقسام المتجر -->
         <div>
             <div class="flex justify-between items-center mb-2">
@@ -81,6 +90,21 @@
         <!-- شبكة المنتجات -->
         <div id="products-grid" class="grid grid-cols-2 gap-3.5"></div>
 
+        <!-- قسم تقييمات وآراء العملاء -->
+        <div class="vanilla-card p-5 rounded-3xl vanilla-border space-y-3">
+            <h4 class="font-bold text-sm text-white flex items-center gap-1.5">⭐ آراء عملائنا المميزين:</h4>
+            <div class="space-y-2.5 text-xs">
+                <div class="bg-black/60 p-3 rounded-2xl border border-white/10 space-y-1">
+                    <div class="flex justify-between font-bold text-white"><span>سارة أحمد</span><span class="text-amber-400">★★★★★</span></div>
+                    <p class="text-zinc-300">"العطور تحفة وثباتها رهيب، والتوصيل كان في ميعاده بالضبط شكراً Vanilla Store 🤍"</p>
+                </div>
+                <div class="bg-black/60 p-3 rounded-2xl border border-white/10 space-y-1">
+                    <div class="flex justify-between font-bold text-white"><span>مريم محمود</span><span class="text-amber-400">★★★★★</span></div>
+                    <p class="text-zinc-300">"المكياج أصلي جداً والأسعار ممتازة، أكيد هكرر التجربة تاني!"</p>
+                </div>
+            </div>
+        </div>
+
         <!-- بيانات العميل والدفع -->
         <div class="vanilla-card p-5 rounded-3xl vanilla-border space-y-4 shadow-xl mt-8">
             <h4 class="font-bold text-sm text-white flex items-center gap-1.5">📍 بيانات التوصيل والدفع:</h4>
@@ -89,8 +113,15 @@
             <input type="text" id="cust-phone" placeholder="رقم الموبايل للتواصل..." class="w-full bg-black/60 border border-white/10 rounded-2xl p-3.5 text-xs text-white focus:outline-none focus:border-white">
             <input type="text" id="cust-address" placeholder="العنوان بالتفصيل (المدينة/الشارع)..." class="w-full bg-black/60 border border-white/10 rounded-2xl p-3.5 text-xs text-white focus:outline-none focus:border-white">
             
+            <!-- كوبون الخصم -->
+            <div class="flex gap-2 pt-2 border-t border-white/10">
+                <input type="text" id="coupon-input" placeholder="أدخل كود الخصم (إن وجد)..." class="flex-1 bg-black/60 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white uppercase">
+                <button type="button" onclick="applyCoupon()" class="bg-zinc-800 hover:bg-zinc-700 text-white px-4 rounded-xl text-xs font-bold border border-white/10 cursor-pointer">تطبيق 🏷️</button>
+            </div>
+            <p id="coupon-msg" class="text-[11px] font-semibold text-emerald-400 hidden"></p>
+
             <!-- اختيار طريقة الدفع -->
-            <div class="space-y-2 pt-2 border-t border-white/10">
+            <div class="space-y-2 pt-1">
                 <label class="block text-xs font-bold text-zinc-300">💳 اختر طريقة الدفع:</label>
                 <div class="grid grid-cols-2 gap-2">
                     <button type="button" onclick="setPaymentMethod('COD')" id="pay-cod-btn" class="p-3 rounded-2xl text-xs font-bold border border-white bg-white text-black cursor-pointer">دفع عند الاستلام 💵</button>
@@ -124,7 +155,7 @@
             </button>
         </div>
 
-        <!-- فوتر الصفحة (أزرار السوشيال ميديا ولوكيشن المحل) -->
+        <!-- فوتر الصفحة -->
         <footer class="vanilla-card p-5 rounded-3xl vanilla-border space-y-3 text-center mt-10">
             <h4 class="font-bold text-xs text-zinc-300 uppercase tracking-wider">📍 تواصل معنا وعنوان المحل</h4>
             <div id="footer-socials" class="grid grid-cols-2 gap-2.5 pt-1"></div>
@@ -132,7 +163,7 @@
 
     </main>
 
-    <!-- نافذة السلة الجانبية (Drawer) -->
+    <!-- نافذة السلة الجانبية -->
     <div id="cart-drawer" class="fixed inset-0 bg-black/85 backdrop-blur-sm hidden z-50 flex justify-end">
         <div class="vanilla-card w-full max-w-sm h-full p-5 flex flex-col justify-between space-y-4 overflow-y-auto border-l border-white/10">
             <div class="flex justify-between items-center border-b border-white/10 pb-3">
@@ -154,15 +185,31 @@
         </div>
     </div>
 
-    <!-- لوحة تحكم المحل (سحابية Real-time) -->
+    <!-- نافذة المفضلة (Wishlist Modal) -->
+    <div id="wishlist-drawer" class="fixed inset-0 bg-black/85 backdrop-blur-sm hidden z-50 flex justify-end">
+        <div class="vanilla-card w-full max-w-sm h-full p-5 flex flex-col justify-between space-y-4 overflow-y-auto border-l border-white/10">
+            <div class="flex justify-between items-center border-b border-white/10 pb-3">
+                <h3 class="font-black text-base text-white">❤️ قائمة المفضلة</h3>
+                <button onclick="toggleWishlistModal()" class="bg-zinc-900 px-3 py-1.5 rounded-xl text-xs text-white cursor-pointer font-bold border border-white/10">✕ إغلاق</button>
+            </div>
+            <div id="wishlist-items" class="space-y-2 flex-1 overflow-y-auto text-xs text-zinc-300">
+                <p class="text-center text-zinc-500 py-6">المفضلة فارغة..</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- لوحة تحكم المحل -->
     <div id="admin-dashboard" class="fixed inset-0 bg-black/95 hidden z-50 overflow-y-auto p-4">
         <div class="max-w-md mx-auto space-y-4 py-6">
             <div class="flex justify-between items-center border-b border-white/10 pb-3">
                 <h3 class="font-black text-base text-white">🔐 لوحة تحكم Vanilla Store</h3>
-                <button onclick="closeAdminDashboard()" class="bg-zinc-900 px-3.5 py-2 rounded-xl text-xs text-white cursor-pointer font-bold border border-white/10">إغلاق ✕</button>
+                <div class="flex gap-2">
+                    <button onclick="exportOrdersExcel()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs px-3 py-2 rounded-xl font-bold cursor-pointer">📥 تصدير Excel</button>
+                    <button onclick="closeAdminDashboard()" class="bg-zinc-900 px-3.5 py-2 rounded-xl text-xs text-white cursor-pointer font-bold border border-white/10">إغلاق ✕</button>
+                </div>
             </div>
 
-            <!-- قسم الإحصائيات الشاملة للموقع -->
+            <!-- إحصائيات الموقع الشاملة -->
             <div class="vanilla-card p-4 rounded-2xl space-y-3">
                 <h4 class="font-bold text-white text-xs">📊 إحصائيات الموقع الشاملة (Analytics):</h4>
                 <div class="grid grid-cols-2 gap-2.5">
@@ -185,17 +232,30 @@
                 </div>
             </div>
 
-            <!-- التحكم في المظهر واللوجو والعروض -->
+            <!-- إدارة كوبونات الخصم الترويجية -->
+            <div class="vanilla-card p-4 rounded-2xl space-y-3">
+                <h4 class="font-bold text-white text-xs">🎟️ إدارة كوبونات الخصم (Promo Codes):</h4>
+                <div class="grid grid-cols-2 gap-2">
+                    <input type="text" id="admin-coupon-code" placeholder="كود الكوبون (مثل: VAN10)" class="bg-black/60 border border-white/10 rounded-xl px-3 py-2 text-xs text-white uppercase">
+                    <input type="number" id="admin-coupon-discount" placeholder="نسبة الخصم %" class="bg-black/60 border border-white/10 rounded-xl px-3 py-2 text-xs text-white">
+                </div>
+                <button onclick="saveAdminCoupon()" class="w-full bg-white text-black text-xs py-2.5 rounded-xl font-black cursor-pointer hover:bg-zinc-200 transition">حفظ وتفعيل الكوبون 🏷️</button>
+            </div>
+
+            <!-- إعدادات الأمان وتغيير الرقم السري (PIN) -->
+            <div class="vanilla-card p-4 rounded-2xl space-y-3">
+                <h4 class="font-bold text-white text-xs">🔒 أمان لوحة التحكم (تغيير الباسورد):</h4>
+                <div class="flex gap-2">
+                    <input type="password" id="new-admin-pin" placeholder="الرقم السري الجديد..." class="flex-1 bg-black/60 border border-white/10 rounded-xl px-3 py-2 text-xs text-white">
+                    <button onclick="saveNewAdminPin()" class="bg-white text-black text-xs px-4 py-2 rounded-xl font-black cursor-pointer hover:bg-zinc-200 transition">تغيير 🔑</button>
+                </div>
+            </div>
+
+            <!-- إعدادات المظهر واللوجو وعروض -->
             <div class="vanilla-card p-4 rounded-2xl space-y-3">
                 <h4 class="font-bold text-white text-xs">🎨 إعدادات المظهر واللوجو والعروض:</h4>
-                <div>
-                    <label class="block text-zinc-400 text-[11px] mb-1">نص الشريط الإعلاني فوق:</label>
-                    <input type="text" id="admin-banner-text" placeholder="اكتب نص العرض أو التنبيه..." class="w-full bg-black/60 border border-white/10 rounded-xl px-3 py-2 text-xs text-white">
-                </div>
-                <div>
-                    <label class="block text-zinc-400 text-[11px] mb-1">رفع صورة اللوجو الجديدة:</label>
-                    <input type="file" id="logo-img-file" accept="image/*" class="w-full text-xs text-zinc-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-white file:text-black hover:file:bg-zinc-200 cursor-pointer">
-                </div>
+                <input type="text" id="admin-banner-text" placeholder="نص الشريط الإعلاني فوق..." class="w-full bg-black/60 border border-white/10 rounded-xl px-3 py-2 text-xs text-white">
+                <input type="file" id="logo-img-file" accept="image/*" class="w-full text-xs text-zinc-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-white file:text-black hover:file:bg-zinc-200 cursor-pointer">
                 <button onclick="saveThemeAndBannerSettings()" class="w-full bg-white text-black text-xs py-2.5 rounded-xl font-black cursor-pointer hover:bg-zinc-200 transition">حفظ المظهر والشريط 💾</button>
             </div>
 
@@ -235,13 +295,13 @@
                 <button onclick="addNewProductCloud()" class="w-full bg-white text-black text-xs py-2.5 rounded-xl font-black cursor-pointer hover:bg-zinc-200 transition">نشر المنتج سحابياً 🚀</button>
             </div>
 
-            <!-- إدارة كل الأصناف وحالة التوفر والخصم -->
+            <!-- إدارة كل الأصناف -->
             <div class="space-y-2 pt-2">
                 <h4 class="font-bold text-zinc-300 text-xs">📦 إدارة جميع أصناف المتجر (متاح / خلصان):</h4>
                 <div id="admin-products-list" class="space-y-2"></div>
             </div>
 
-            <!-- أوردرات العملاء الواردة سحابياً (مع زرار تسليم الأوردر) -->
+            <!-- أوردرات العملاء الواردة سحابياً -->
             <div class="space-y-2 pt-4 border-t border-white/10">
                 <h4 class="font-bold text-zinc-300 text-xs">📋 أوردرات العملاء الواردة سحابياً (Real-time):</h4>
                 <div id="cloud-orders-list" class="space-y-2"></div>
@@ -252,7 +312,7 @@
     <!-- نافذة دخول الإدارة السرية -->
     <div id="admin-pin-modal" class="fixed inset-0 bg-black/90 backdrop-blur-sm hidden z-60 flex items-center justify-center p-4">
         <div class="vanilla-card w-full max-w-sm p-6 rounded-3xl space-y-4 border border-white/20">
-            <h3 class="font-black text-base text-white">🔐 أدخل الرقم السري للوحة الإدارة</h3>
+            <h3 class="font-black text-base text-white">🔐 أدخل الرقم السري لوحة الإدارة</h3>
             <input type="password" id="pin-input" placeholder="••••" class="w-full bg-black/60 border border-white/10 rounded-2xl p-3.5 text-center text-white tracking-widest text-lg">
             <div class="flex gap-2">
                 <button onclick="verifyAdminPin()" class="flex-1 bg-white text-black py-3 rounded-xl font-black cursor-pointer hover:bg-zinc-200 transition">دخول</button>
@@ -281,9 +341,13 @@
         let walletName = localStorage.getItem('vanilla_wallet_name') || "فودافون كاش";
         let walletNumber = localStorage.getItem('vanilla_wallet_num') || "01000000000";
         let walletOwner = localStorage.getItem('vanilla_wallet_owner') || "محمد أحمد";
+        let adminPin = localStorage.getItem('vanilla_admin_pin') || "1234";
         let promoText = localStorage.getItem('vanilla_promo') || "✨ Vanilla Store • Makeup & Accessories • أناقتك تبدأ من هنا 🤍";
         let storeLogo = localStorage.getItem('vanilla_logo') || "";
         
+        // كوبونات الخصم النشطة
+        let activeCoupon = JSON.parse(localStorage.getItem('vanilla_active_coupon')) || { code: "VANILLA10", discount: 10 };
+
         let socialLinks = JSON.parse(localStorage.getItem('vanilla_socials')) || {
             fb: "https://facebook.com",
             ig: "https://instagram.com",
@@ -296,8 +360,12 @@
         let paymentMethod = "COD";
         let transferScreenBase64 = "";
         let cart = [];
+        let wishlist = JSON.parse(localStorage.getItem('vanilla_wishlist')) || [];
+        let appliedCouponDiscount = 0;
         let currentCategory = "الكل";
+        let searchQuery = "";
         let products = [];
+        let ordersDataCache = [];
 
         let defaultProducts = [
             { id: 1, name: "عطر فانيلا ملكي فاخر", price: 650, discount: 15, category: "العروض 🔥", image: "https://images.unsplash.com/photo-1523293182086-7651a899d37f?w=500", available: true },
@@ -312,6 +380,7 @@
             } else {
                 logoContainer.innerHTML = `<span class="text-2xl font-black text-black">V</span>`;
             }
+            renderWishlistCount();
         }
 
         let logoClicks = 0;
@@ -325,7 +394,7 @@
 
         function verifyAdminPin() {
             let pin = document.getElementById('pin-input').value;
-            if(pin === "1234") {
+            if(pin === adminPin) {
                 document.getElementById('admin-pin-modal').classList.add('hidden');
                 document.getElementById('pin-input').value = "";
                 document.getElementById('admin-dashboard').classList.remove('hidden');
@@ -335,6 +404,9 @@
                 document.getElementById('wallet-number').value = walletNumber;
                 document.getElementById('wallet-owner').value = walletOwner;
                 document.getElementById('admin-banner-text').value = promoText;
+                document.getElementById('admin-coupon-code').value = activeCoupon.code;
+                document.getElementById('admin-coupon-discount').value = activeCoupon.discount;
+                document.getElementById('new-admin-pin').value = "";
                 document.getElementById('social-fb').value = socialLinks.fb;
                 document.getElementById('social-ig').value = socialLinks.ig;
                 document.getElementById('social-tt').value = socialLinks.tt;
@@ -344,6 +416,41 @@
                 loadCloudOrdersRealtime();
                 renderAdminProductsList();
             } else { alert("الرقم السري خاطئ!"); }
+        }
+
+        function saveNewAdminPin() {
+            let newPin = document.getElementById('new-admin-pin').value.trim();
+            if(!newPin || newPin.length < 4) { alert("أدخل رقم سري جديد لا يقل عن 4 أرقام!"); return; }
+            adminPin = newPin;
+            localStorage.setItem('vanilla_admin_pin', adminPin);
+            alert("تم تغيير الرقم السري بنجاح! 🔑");
+            document.getElementById('new-admin-pin').value = "";
+        }
+
+        function saveAdminCoupon() {
+            let code = document.getElementById('admin-coupon-code').value.trim().toUpperCase();
+            let disc = parseFloat(document.getElementById('admin-coupon-discount').value) || 0;
+            if(!code || disc <= 0) { alert("أدخل كود صالح ونسبة خصم صحيحة!"); return; }
+            activeCoupon = { code, discount: disc };
+            localStorage.setItem('vanilla_active_coupon', JSON.stringify(activeCoupon));
+            alert(`تم حفظ وتفعيل الكوبون (${code}) بنجاح بقيمة خصم ${disc}%! 🎟️️`);
+        }
+
+        function applyCoupon() {
+            let inputCode = document.getElementById('coupon-input').value.trim().toUpperCase();
+            let msg = document.getElementById('coupon-msg');
+            if(inputCode === activeCoupon.code) {
+                appliedCouponDiscount = activeCoupon.discount;
+                msg.innerText = `تم تطبيق كوبون الخصم بنجاح (${appliedCouponDiscount}%) 🎉`;
+                msg.classList.remove('hidden');
+                renderCart();
+            } else {
+                appliedCouponDiscount = 0;
+                msg.innerText = "كود الخصم غير صحيح أو منتهي!";
+                msg.classList.remove('hidden');
+                msg.className = "text-[11px] font-semibold text-red-400";
+                renderCart();
+            }
         }
 
         function closeAdminDashboard() { document.getElementById('admin-dashboard').classList.add('hidden'); }
@@ -369,7 +476,8 @@
             let instapayBtn = document.getElementById('instapay-direct-btn');
             let copyBtn = document.getElementById('copy-wallet-btn');
 
-            let cartTotal = cart.reduce((s, i) => s + (i.finalPrice * i.qty), 0);
+            let subtotal = cart.reduce((s, i) => s + (i.finalPrice * i.qty), 0);
+            let cartTotal = Math.round(subtotal * (1 - appliedCouponDiscount / 100));
 
             if(method === 'COD') {
                 codBtn.className = "p-3 rounded-2xl text-xs font-bold border border-white bg-white text-black cursor-pointer";
@@ -431,6 +539,11 @@
             });
         }
 
+        function handleSearch(val) {
+            searchQuery = val.trim().toLowerCase();
+            renderProducts();
+        }
+
         function renderCategories() {
             let bar = document.getElementById('categories-bar');
             let cats = ["الكل", "العروض 🔥"];
@@ -442,7 +555,7 @@
             });
         }
 
-        function filterCat(c) { currentCategory = c; renderCategories(); renderProducts(); }
+        function filterCat(c) { currentCategory = c; searchQuery = ""; document.getElementById('live-search-input').value = ""; renderCategories(); renderProducts(); }
 
         function renderProducts() {
             let grid = document.getElementById('products-grid');
@@ -450,17 +563,22 @@
             
             let filtered = products.filter(p => {
                 if(p.available === false) return false;
+                // فلترة البحث الفوري
+                if(searchQuery) {
+                    return p.name.toLowerCase().includes(searchQuery) || p.category.toLowerCase().includes(searchQuery);
+                }
                 if(currentCategory === "الكل") return true;
                 if(currentCategory === "العروض 🔥") return (p.discount && p.discount > 0) || p.category === "العروض 🔥";
                 return p.category === currentCategory;
             });
             
             if(filtered.length === 0) {
-                grid.innerHTML = `<p class="text-xs text-zinc-500 text-center py-6 col-span-2">لا توجد منتجات متاحة في هذا القسم حالياً..</p>`;
+                grid.innerHTML = `<p class="text-xs text-zinc-500 text-center py-6 col-span-2">لا توجد منتجات مطابقة للبحث أو القسم حالياً..</p>`;
                 return;
             }
 
             filtered.forEach((p) => {
+                let isFav = wishlist.some(item => item.id == p.id);
                 let discBadge = p.discount > 0 ? `<span class="absolute top-2 right-2 bg-white text-black text-[10px] font-black px-2.5 py-1 rounded-full shadow-lg">خصم ${p.discount}% 🔥</span>` : '';
                 let priceHtml = p.discount > 0 ? `
                     <div class="flex items-center gap-1.5">
@@ -472,6 +590,9 @@
                 grid.innerHTML += `
                     <div class="vanilla-card p-3 rounded-3xl flex flex-col justify-between space-y-2 shadow relative overflow-hidden">
                         ${discBadge}
+                        <button onclick="toggleWishlist('${p.id}')" class="absolute top-2 left-2 bg-black/60 p-1.5 rounded-full border border-white/10 text-xs cursor-pointer hover:bg-black/90 transition">
+                            ${isFav ? '❤️' : '🤍'}
+                        </button>
                         <img src="${p.image}" class="w-full h-28 object-cover rounded-2xl border border-white/10">
                         <div>
                             <span class="text-[9px] bg-white/10 text-zinc-300 px-2 py-0.5 rounded font-bold">${p.category}</span>
@@ -479,6 +600,54 @@
                             ${priceHtml}
                         </div>
                         <button onclick="addToCart('${p.id}')" class="w-full bg-white hover:bg-zinc-200 text-black py-2 rounded-xl text-xs font-black cursor-pointer transition">إضافة للسلة 🛍️</button>
+                    </div>
+                `;
+            });
+        }
+
+        // المفضلة
+        function toggleWishlist(id) {
+            let p = products.find(item => item.id == id);
+            let idx = wishlist.findIndex(item => item.id == id);
+            if(idx > -1) {
+                wishlist.splice(idx, 1);
+            } else {
+                wishlist.push(p);
+            }
+            localStorage.setItem('vanilla_wishlist', JSON.stringify(wishlist));
+            renderWishlistCount();
+            renderProducts();
+            renderWishlistModal();
+        }
+
+        function renderWishlistCount() {
+            document.getElementById('wishlist-header-count').innerText = wishlist.length;
+        }
+
+        function toggleWishlistModal() {
+            let drawer = document.getElementById('wishlist-drawer');
+            drawer.classList.toggle('hidden');
+            renderWishlistModal();
+        }
+
+        function renderWishlistModal() {
+            let container = document.getElementById('wishlist-items');
+            if(wishlist.length === 0) {
+                container.innerHTML = `<p class="text-center text-zinc-500 py-6">قائمة المفضلة فارغة..</p>`;
+                return;
+            }
+            container.innerHTML = "";
+            wishlist.forEach((i, idx) => {
+                container.innerHTML += `
+                    <div class="flex justify-between items-center bg-black/60 p-2.5 rounded-xl border border-white/10">
+                        <div class="flex items-center gap-2">
+                            <img src="${i.image}" class="w-10 h-10 object-cover rounded-lg">
+                            <div><p class="font-bold text-white">${i.name}</p><span class="text-zinc-400">${i.finalPrice} ج.م</span></div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="addToCart('${i.id}'); toggleWishlistModal();" class="bg-white text-black px-2.5 py-1.5 rounded-lg font-black text-[10px]">شراء 🛍️</button>
+                            <button onclick="wishlist.splice(${idx},1); localStorage.setItem('vanilla_wishlist', JSON.stringify(wishlist)); renderWishlistCount(); renderWishlistModal(); renderProducts();" class="text-red-400">✕</button>
+                        </div>
                     </div>
                 `;
             });
@@ -552,10 +721,10 @@
             }
 
             container.innerHTML = "";
-            let total = 0;
+            let subtotal = 0;
             cart.forEach((i, idx) => {
                 let sub = i.finalPrice * i.qty;
-                total += sub;
+                subtotal += sub;
                 container.innerHTML += `
                     <div class="flex justify-between items-center bg-black/60 p-2.5 rounded-xl border border-white/10">
                         <div><p class="font-bold text-white">${i.name}</p><p class="text-[10px] text-zinc-400">العدد: ${i.qty}</p></div>
@@ -563,7 +732,9 @@
                     </div>
                 `;
             });
-            totalEl.innerText = total + " ج.م";
+
+            let finalTotal = appliedCouponDiscount > 0 ? Math.round(subtotal * (1 - appliedCouponDiscount / 100)) : subtotal;
+            totalEl.innerHTML = appliedCouponDiscount >  0 ? `<span class="line-through text-xs text-zinc-500 ml-2">${subtotal} ج.م</span> ${finalTotal} ج.م` : `${finalTotal} ج.م`;
         }
 
         async function sendOrderCloud() {
@@ -576,7 +747,8 @@
             if(paymentMethod === 'ONLINE' && !transferScreenBase64) { alert("من فضلك ارفع سكرين شوت التحويل الإلكتروني!"); return; }
 
             let orderId = "#VAN-" + Math.floor(1000 + Math.random() * 9000);
-            let total = cart.reduce((s, i) => s + (i.finalPrice * i.qty), 0);
+            let subtotal = cart.reduce((s, i) => s + (i.finalPrice * i.qty), 0);
+            let total = appliedCouponDiscount > 0 ? Math.round(subtotal * (1 - appliedCouponDiscount / 100)) : subtotal;
 
             let orderData = {
                 orderId: orderId,
@@ -585,6 +757,7 @@
                 address: address,
                 items: cart,
                 total: total,
+                coupon: appliedCouponDiscount > 0 ? activeCoupon.code : 'بدون كوبون',
                 payment: paymentMethod === 'COD' ? 'دفع عند الاستلام 💵' : `تحويل إلكتروني (${walletName}) 📱`,
                 transferScreen: transferScreenBase64 || null,
                 status: 'جديد بانتظار المراجعة 📦',
@@ -594,7 +767,9 @@
             try {
                 await db.collection("vanilla_orders").add(orderData);
 
-                let text = `🛍️ أوردر جديد من Vanilla Store:\n📌 رقم الأوردر: ${orderId}\n👤 العميلة: ${name}\n📞 الهاتف: ${phone}\n📍 العنوان: ${address}\n💳 طريقة الدفع: ${orderData.payment}\n\nالمنتجات:\n`;
+                let text = `🛍️ أوردر جديد من Vanilla Store:\n📌 رقم الأوردر: ${orderId}\n👤 العميلة: ${name}\n📞 الهاتف: ${phone}\n📍 العنوان: ${address}\n💳 طريقة الدفع: ${orderData.payment}\n`;
+                if(appliedCouponDiscount > 0) text += `🎟️ الكوبون المستخدم: ${activeCoupon.code} (خصم ${appliedCouponDiscount}%)\n`;
+                text += `\nالمنتجات:\n`;
                 cart.forEach(i => { text += `- ${i.name} (عدد: ${i.qty}) | ${i.finalPrice * i.qty} ج.م\n`; });
                 text += `\n💰 الإجمالي الكلي: ${total} ج.م`;
                 if(transferScreenBase64) { text += `\n\n📸 (تم إرفاق سكرين شوت التحويل في النظام سحابياً)`; }
@@ -603,11 +778,12 @@
                 alert("تم إرسال أوردرك بنجاح لـ Vanilla Store! 🍦✨");
                 cart = [];
                 transferScreenBase64 = "";
+                appliedCouponDiscount = 0;
                 renderCart();
             } catch (error) { alert("خطأ: " + error.message); }
         }
 
-        // جلب الأوردرات وحساب الإحصائيات الشاملة باللحظة (Analytics)
+        // جلب الأوردرات وحساب الإحصائيات
         function loadCloudOrdersRealtime() {
             let list = document.getElementById('cloud-orders-list');
             db.collection("vanilla_orders").orderBy("createdAt", "desc").onSnapshot(snapshot => {
@@ -615,6 +791,7 @@
                 let totalOrders = snapshot.size;
                 let deliveredCount = 0;
                 let pendingCount = 0;
+                ordersDataCache = [];
 
                 if(snapshot.empty) {
                     list.innerHTML = `<p class="text-xs text-zinc-500 text-center py-3">لا توجد أوردرات حالياً..</p>`;
@@ -626,6 +803,7 @@
                 snapshot.forEach(doc => {
                     let o = doc.data();
                     let docId = doc.id;
+                    ordersDataCache.push({ id: docId, ...o });
                     let isDelivered = o.status && o.status.includes('تم التسليم');
 
                     if(isDelivered) {
@@ -635,14 +813,20 @@
                         pendingCount++;
                     }
 
+                    let dateStr = "الآن";
+                    if(o.createdAt && o.createdAt.toDate) {
+                        let dt = o.createdAt.toDate();
+                        dateStr = dt.toLocaleDateString('ar-EG') + ' - ' + dt.toLocaleTimeString('ar-EG', {hour: '2-digit', minute:'2-digit'});
+                    }
+
                     let itemsStr = o.items ? o.items.map(i => `• ${i.name} (عدد ${i.qty})`).join('<br>') : '';
                     let screenHtml = o.transferScreen ? `<a href="${o.transferScreen}" target="_blank" class="block bg-zinc-900 text-white text-center py-1.5 rounded-lg font-bold border border-white/20 mt-2">👁️ عرض سكرين شوت التحويل</a>` : '';
                     
                     list.innerHTML += `
                         <div class="vanilla-card p-3 rounded-xl text-xs space-y-1.5 border border-white/10">
-                            <div class="flex justify-between font-bold text-white"><span>${o.orderId} - ${o.name}</span><span>${o.total} ج.م</span></div>
+                            <div class="flex justify-between font-bold text-white"><span>${o.orderId} - ${o.name}</span><span class="text-zinc-400 text-[10px]">${dateStr}</span></div>
                             <p class="text-zinc-300">📞 ${o.phone} | 📍 ${o.address}</p>
-                            <p class="text-emerald-400 font-semibold">💳 ${o.payment}</p>
+                            <p class="text-emerald-400 font-semibold">💳 ${o.payment} | 💰 <b>${o.total} ج.م</b> ${o.coupon !== 'بدون كوبون' ? `(كوبون: ${o.coupon})` : ''}</p>
                             <div class="bg-black/60 p-2 rounded text-zinc-300 border border-white/10">${itemsStr}</div>
                             ${screenHtml}
                             <div class="flex justify-between items-center pt-2 border-t border-white/10">
@@ -657,6 +841,21 @@
             });
         }
 
+        // تصدير التقارير إلى Excel/CSV
+        function exportOrdersExcel() {
+            if(ordersDataCache.length === 0) { alert("لا توجد أوردرات لتصديرها!"); return; }
+            let csvContent = "\uFEFFرقم الأوردر,اسم العميل,الهاتف,العنوان,الإجمالي,طريقة الدفع,الحالة\n";
+            ordersDataCache.forEach(o => {
+                csvContent += `"${o.orderId}","${o.name}","${o.phone}","${o.address}","${o.total} ج.م","${o.payment}","${o.status}"\n`;
+            });
+            let blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            let url = URL.createObjectURL(blob);
+            let a = document.createElement('a');
+            a.href = url;
+            a.download = `Vanilla_Store_Orders_${new Date().toISOString().slice(0,10)}.csv`;
+            a.click();
+        }
+
         function updateAnalyticsUI(sales, orders, delivered, pending) {
             document.getElementById('stat-total-sales').innerText = sales + " ج.م";
             document.getElementById('stat-total-orders').innerText = orders;
@@ -667,10 +866,8 @@
         async function markAsDelivered(docId) {
             try {
                 await db.collection("vanilla_orders").doc(docId).update({ status: 'تم التسليم بنجاح 🟢' });
-                alert("تم تحديث حالة الأوردر إلى (تم التسليم بنجاح) وتمت إضافة المبيعات للإحصائيات! 🟢");
-            } catch(err) {
-                alert("خطأ: " + err.message);
-            }
+                alert("تم تحديث حالة الأوردر بنجاح! 🟢");
+            } catch(err) { alert("خطأ: " + err.message); }
         }
 
         function addNewProductCloud() {
