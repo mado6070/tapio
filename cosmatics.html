@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vanilla Store | متجر العطور ومستحضرات التجميل</title>
+    <title>Vanilla Store | Makeup & Accessories</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <!-- Google Fonts (Cairo) -->
@@ -14,61 +14,66 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
     <style>
-        body { font-family: 'Cairo', sans-serif; background-color: #121016; color: #fdfcff; }
-        .vanilla-card { background: rgba(35, 28, 45, 0.9); backdrop-filter: blur(14px); border: 1px solid rgba(244, 114, 182, 0.25); }
-        .vanilla-glow { box-shadow: 0 0 35px rgba(244, 114, 182, 0.2); }
-        .vanilla-border { border: 1px solid rgba(244, 114, 182, 0.4); }
+        body { font-family: 'Cairo', sans-serif; background-color: #0b0a0f; color: #fdfcff; }
+        .vanilla-card { background: rgba(22, 20, 28, 0.95); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        .vanilla-glow { box-shadow: 0 0 40px rgba(255, 255, 255, 0.04); }
+        .vanilla-border { border: 1px solid rgba(255, 255, 255, 0.12); }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
-<body class="min-h-screen pb-36 selection:bg-pink-600 selection:text-white">
+<body class="min-h-screen pb-36 selection:bg-white selection:text-black">
 
     <!-- شريط إعلاني فخم (يتحدث سحابياً) -->
-    <div id="promo-banner-bar" class="bg-gradient-to-r from-pink-600 via-rose-500 to-purple-700 text-white text-[11px] font-bold py-2 px-4 text-center tracking-wider shadow-lg">
-        ✨ Vanilla Store • أناقتك تبدأ من هنا مع أرقى العطور ومستحضرات التجميل الأصلية 🌸
+    <div id="promo-banner-bar" class="bg-gradient-to-r from-zinc-900 via-zinc-800 to-black text-zinc-300 text-[11px] font-bold py-2 px-4 text-center tracking-wider border-b border-white/10 shadow-lg">
+        ✨ Vanilla Store • Makeup & Accessories • أناقتك تبدأ من هنا 🤍
     </div>
 
-    <!-- الهيدر الشيك -->
-    <header class="vanilla-card border-b border-purple-950 p-4 sticky top-0 z-40">
+    <!-- الهيدر الأنيق المستوحى من اللوجو -->
+    <header class="vanilla-card border-b border-white/10 p-4 sticky top-0 z-40">
         <div class="max-w-md mx-auto flex justify-between items-center">
-            <!-- اللوجو (صورة أو أيقونة + اسم المحل - اضغط 5 مرات لفتح الإدارة) -->
+            <!-- اللوجو (اضغط 5 مرات لفتح الإدارة) -->
             <div onclick="handleLogoClick()" class="flex items-center gap-3 cursor-pointer select-none" title="Vanilla Store">
-                <div id="header-logo-container" class="w-12 h-12 bg-gradient-to-tr from-pink-500 to-rose-600 rounded-2xl flex items-center justify-center font-black text-xl vanilla-glow text-white shadow-lg shadow-pink-600/30 overflow-hidden">
-                    🍦
+                <div id="header-logo-container" class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center font-black text-xl vanilla-glow text-black shadow-xl overflow-hidden border border-zinc-300">
+                    <span class="text-2xl font-black">V</span>
                 </div>
                 <div class="text-right">
-                    <h1 class="font-black text-base text-white tracking-wide">Vanilla Store 🤍</h1>
-                    <p class="text-[10px] text-pink-400 font-semibold">Cosmetics & Perfumes</p>
+                    <h1 class="font-black text-sm text-white tracking-wider">VANILLA STORE</h1>
+                    <p class="text-[9px] text-zinc-400 font-semibold tracking-widest uppercase">Makeup & Accessories</p>
                 </div>
             </div>
             <div class="flex items-center gap-1.5">
-                <span class="bg-pink-500/20 border border-pink-500/40 text-pink-400 text-[10px] px-2.5 py-1.5 rounded-xl font-bold">أصلي 100% ✨</span>
+                <span class="bg-white/10 border border-white/20 text-zinc-200 text-[10px] px-2.5 py-1.5 rounded-xl font-bold">أصلي 100% ✨</span>
             </div>
         </div>
     </header>
 
     <!-- زرار السلة الجانبي العائم -->
-    <button onclick="toggleCartModal()" class="fixed left-4 bottom-24 z-45 bg-gradient-to-r from-pink-600 to-rose-600 text-white p-3.5 rounded-full shadow-2xl flex items-center gap-2 cursor-pointer vanilla-glow border border-pink-400/40 hover:scale-105 transition">
+    <button onclick="toggleCartModal()" class="fixed left-4 bottom-24 z-45 bg-white text-black p-4 rounded-full shadow-2xl flex items-center gap-2 cursor-pointer hover:bg-zinc-200 transition font-black">
         <span class="text-xl">🛍️</span>
-        <span id="floating-cart-count" class="bg-white text-pink-700 text-xs font-black px-2 py-0.5 rounded-full">0</span>
+        <span id="floating-cart-count" class="bg-black text-white text-xs font-black px-2 py-0.5 rounded-full">0</span>
     </button>
 
     <!-- المحتوى الرئيسي -->
     <main class="max-w-md mx-auto p-4 space-y-5">
         
-        <!-- بانر ترحيبي فخم في الهيدر -->
-        <div class="vanilla-card p-5 rounded-3xl vanilla-glow text-center space-y-2 vanilla-border relative overflow-hidden">
-            <div class="absolute -right-6 -top-6 w-24 h-24 bg-pink-500/10 rounded-full blur-xl"></div>
-            <span class="bg-pink-600/20 text-pink-300 text-[10px] font-extrabold px-3 py-1 rounded-full border border-pink-500/30 uppercase tracking-wider">عروض وتخفيضات حصرية</span>
-            <h2 class="font-black text-lg text-white">تألقي بأرقى العطور ومستحضرات التجميل</h2>
-            <p id="store-welcome-text" class="text-xs text-gray-300">تسوقي من تشكيلة فانيلا الفاخرة بكل سهولة وأمان.</p>
+        <!-- بانر ترحيبي مع زرار عروض حصرية -->
+        <div class="vanilla-card p-6 rounded-3xl vanilla-glow text-center space-y-3 vanilla-border relative overflow-hidden">
+            <div class="absolute -right-6 -top-6 w-24 h-24 bg-white/5 rounded-full blur-xl"></div>
+            <span class="bg-white/10 text-zinc-200 text-[10px] font-extrabold px-3.5 py-1 rounded-full border border-white/20 uppercase tracking-widest">تخفيضات فانيلا الكبرى</span>
+            <h2 class="font-black text-lg text-white">أرقى مستحضرات التجميل والإكسسوارات</h2>
+            <p id="store-welcome-text" class="text-xs text-zinc-400">اكتشفي تشكيلة مميزة تليق بسحرك وأناقتك.</p>
+            
+            <!-- زرار الانتقال السريع لقسم العروض -->
+            <button onclick="filterCat('العروض 🔥')" class="w-full bg-gradient-to-r from-zinc-100 to-zinc-300 hover:from-white hover:to-zinc-200 text-black font-black py-3.5 rounded-2xl shadow-xl transition flex items-center justify-center gap-2 cursor-pointer text-xs">
+                🔥 تصفح عروض التخفيضات الكبرى الآن
+            </button>
         </div>
 
         <!-- أقسام المتجر -->
         <div>
             <div class="flex justify-between items-center mb-2">
-                <h3 class="font-bold text-xs text-gray-400 uppercase tracking-wider">📂 أقسام المتجر</h3>
+                <h3 class="font-bold text-xs text-zinc-400 uppercase tracking-wider">📂 أقسام المتجر</h3>
             </div>
             <div id="categories-bar" class="flex gap-2 overflow-x-auto no-scrollbar pb-1"></div>
         </div>
@@ -80,73 +85,71 @@
         <div class="vanilla-card p-5 rounded-3xl vanilla-border space-y-4 shadow-xl mt-8">
             <h4 class="font-bold text-sm text-white flex items-center gap-1.5">📍 بيانات التوصيل والدفع:</h4>
             
-            <input type="text" id="cust-name" placeholder="اسمك الكريم..." class="w-full bg-gray-900 border border-gray-800 rounded-2xl p-3.5 text-xs text-white focus:outline-none focus:border-pink-500">
-            <input type="text" id="cust-phone" placeholder="رقم الموبايل للتواصل..." class="w-full bg-gray-900 border border-gray-800 rounded-2xl p-3.5 text-xs text-white focus:outline-none focus:border-pink-500">
-            <input type="text" id="cust-address" placeholder="العنوان بالتفصيل (المدينة/الشارع)..." class="w-full bg-gray-900 border border-gray-800 rounded-2xl p-3.5 text-xs text-white focus:outline-none focus:border-pink-500">
+            <input type="text" id="cust-name" placeholder="اسمك الكريم..." class="w-full bg-black/60 border border-white/10 rounded-2xl p-3.5 text-xs text-white focus:outline-none focus:border-white">
+            <input type="text" id="cust-phone" placeholder="رقم الموبايل للتواصل..." class="w-full bg-black/60 border border-white/10 rounded-2xl p-3.5 text-xs text-white focus:outline-none focus:border-white">
+            <input type="text" id="cust-address" placeholder="العنوان بالتفصيل (المدينة/الشارع)..." class="w-full bg-black/60 border border-white/10 rounded-2xl p-3.5 text-xs text-white focus:outline-none focus:border-white">
             
             <!-- اختيار طريقة الدفع -->
-            <div class="space-y-2 pt-2 border-t border-purple-950">
-                <label class="block text-xs font-bold text-pink-400">💳 اختر طريقة الدفع:</label>
+            <div class="space-y-2 pt-2 border-t border-white/10">
+                <label class="block text-xs font-bold text-zinc-300">💳 اختر طريقة الدفع:</label>
                 <div class="grid grid-cols-2 gap-2">
-                    <button type="button" onclick="setPaymentMethod('COD')" id="pay-cod-btn" class="p-3 rounded-2xl text-xs font-bold border border-pink-500 bg-pink-600 text-white cursor-pointer">دفع عند الاستلام 💵</button>
-                    <button type="button" onclick="setPaymentMethod('ONLINE')" id="pay-online-btn" class="p-3 rounded-2xl text-xs font-bold border border-gray-800 bg-gray-900 text-gray-300 cursor-pointer">انستاباي / محفظة 📱</button>
+                    <button type="button" onclick="setPaymentMethod('COD')" id="pay-cod-btn" class="p-3 rounded-2xl text-xs font-bold border border-white bg-white text-black cursor-pointer">دفع عند الاستلام 💵</button>
+                    <button type="button" onclick="setPaymentMethod('ONLINE')" id="pay-online-btn" class="p-3 rounded-2xl text-xs font-bold border border-white/20 bg-black/50 text-zinc-300 cursor-pointer">انستاباي / محفظة 📱</button>
                 </div>
             </div>
 
             <!-- تفاصيل الدفع الإلكتروني -->
-            <div id="online-payment-box" class="hidden bg-gray-900/90 p-4 rounded-2xl border border-pink-500/30 space-y-3 text-xs">
-                <p id="payment-instructions" class="text-gray-300 font-semibold leading-relaxed"></p>
+            <div id="online-payment-box" class="hidden bg-black/80 p-4 rounded-2xl border border-white/20 space-y-3 text-xs">
+                <p id="payment-instructions" class="text-zinc-300 font-semibold leading-relaxed"></p>
                 
-                <!-- زرار نسخ رقم المحفظة -->
-                <button type="button" id="copy-wallet-btn" onclick="copyWalletNumber()" class="w-full bg-gray-800 hover:bg-gray-700 text-pink-400 py-2.5 rounded-xl font-bold border border-pink-500/30 transition hidden">
+                <button type="button" id="copy-wallet-btn" onclick="copyWalletNumber()" class="w-full bg-zinc-800 hover:bg-zinc-700 text-white py-2.5 rounded-xl font-bold border border-white/10 transition hidden">
                     📋 نسخ رقم المحفظة
                 </button>
 
-                <!-- زرار فتح انستاباي مباشر -->
-                <a id="instapay-direct-btn" href="#" target="_blank" class="w-full bg-purple-700 hover:bg-purple-600 text-white py-3 rounded-xl font-black text-center flex items-center justify-center gap-2 shadow-lg transition hidden">
+                <a id="instapay-direct-btn" href="#" target="_blank" class="w-full bg-white hover:bg-zinc-200 text-black py-3 rounded-xl font-black text-center flex items-center justify-center gap-2 shadow-lg transition hidden">
                     🚀 فتح تطبيق انستاباي للتحويل فوراً
                 </a>
 
                 <div>
-                    <label class="block text-gray-400 mb-1">📸 ارفع سكرين شوت التحويل:</label>
-                    <input type="file" id="transfer-screen-file" accept="image/*" class="w-full text-xs text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-pink-600 file:text-white hover:file:bg-pink-500 cursor-pointer">
+                    <label class="block text-zinc-400 mb-1">📸 ارفع سكرين شوت التحويل:</label>
+                    <input type="file" id="transfer-screen-file" accept="image/*" class="w-full text-xs text-zinc-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-white file:text-black hover:file:bg-zinc-200 cursor-pointer">
                 </div>
                 <div id="screen-preview-container" class="hidden mt-2">
-                    <img id="screen-preview-img" class="w-full h-32 object-cover rounded-xl border border-gray-800">
+                    <img id="screen-preview-img" class="w-full h-32 object-cover rounded-xl border border-white/10">
                 </div>
             </div>
 
-            <button onclick="sendOrderCloud()" class="w-full bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-500 hover:to-rose-500 text-white font-black py-4 rounded-2xl transition shadow-xl shadow-pink-900/40 flex items-center justify-center gap-2 cursor-pointer text-sm">
+            <button onclick="sendOrderCloud()" class="w-full bg-white hover:bg-zinc-200 text-black font-black py-4 rounded-2xl transition shadow-xl flex items-center justify-center gap-2 cursor-pointer text-sm">
                 ☁️ إرسال الأوردر للمحل سحابياً وعبر الواتساب 🚀
             </button>
         </div>
 
         <!-- فوتر الصفحة (أزرار السوشيال ميديا ولوكيشن المحل) -->
         <footer class="vanilla-card p-5 rounded-3xl vanilla-border space-y-3 text-center mt-10">
-            <h4 class="font-bold text-xs text-pink-400 uppercase tracking-wider">📍 تواصل معنا وعنوان المحل</h4>
+            <h4 class="font-bold text-xs text-zinc-300 uppercase tracking-wider">📍 تواصل معنا وعنوان المحل</h4>
             <div id="footer-socials" class="grid grid-cols-2 gap-2.5 pt-1"></div>
         </footer>
 
     </main>
 
     <!-- نافذة السلة الجانبية (Drawer) -->
-    <div id="cart-drawer" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden z-50 flex justify-end">
-        <div class="vanilla-card w-full max-w-sm h-full p-5 flex flex-col justify-between space-y-4 overflow-y-auto">
-            <div class="flex justify-between items-center border-b border-purple-950 pb-3">
-                <h3 class="font-black text-base text-pink-400">🛒 سلة المشتريات</h3>
-                <button onclick="toggleCartModal()" class="bg-gray-900 px-3 py-1.5 rounded-xl text-xs text-white cursor-pointer font-bold border border-gray-800">✕ إغلاق</button>
+    <div id="cart-drawer" class="fixed inset-0 bg-black/85 backdrop-blur-sm hidden z-50 flex justify-end">
+        <div class="vanilla-card w-full max-w-sm h-full p-5 flex flex-col justify-between space-y-4 overflow-y-auto border-l border-white/10">
+            <div class="flex justify-between items-center border-b border-white/10 pb-3">
+                <h3 class="font-black text-base text-white">🛒 سلة المشتريات</h3>
+                <button onclick="toggleCartModal()" class="bg-zinc-900 px-3 py-1.5 rounded-xl text-xs text-white cursor-pointer font-bold border border-white/10">✕ إغلاق</button>
             </div>
 
-            <div id="cart-items" class="space-y-2 flex-1 overflow-y-auto text-xs text-gray-300">
-                <p class="text-center text-gray-500 py-6">السلة فارغة..</p>
+            <div id="cart-items" class="space-y-2 flex-1 overflow-y-auto text-xs text-zinc-300">
+                <p class="text-center text-zinc-500 py-6">السلة فارغة..</p>
             </div>
 
-            <div class="space-y-3 pt-3 border-t border-purple-950">
+            <div class="space-y-3 pt-3 border-t border-white/10">
                 <div class="flex justify-between items-center font-bold text-sm">
-                    <span class="text-gray-400">الإجمالي الكلي:</span>
-                    <span id="cart-total" class="text-pink-400 text-base">0 ج.م</span>
+                    <span class="text-zinc-400">الإجمالي الكلي:</span>
+                    <span id="cart-total" class="text-white text-base">0 ج.م</span>
                 </div>
-                <button onclick="toggleCartModal(); document.getElementById('cust-name').scrollIntoView({behavior: 'smooth'});" class="w-full bg-pink-600 text-white py-3.5 rounded-2xl font-bold text-xs cursor-pointer">تأكيد واكتب بيانات التوصيل 📍</button>
+                <button onclick="toggleCartModal(); document.getElementById('cust-name').scrollIntoView({behavior: 'smooth'});" class="w-full bg-white text-black py-3.5 rounded-2xl font-black text-xs cursor-pointer hover:bg-zinc-200 transition">تأكيد واكتب بيانات التوصيل 📍</button>
             </div>
         </div>
     </div>
@@ -154,118 +157,101 @@
     <!-- لوحة تحكم المحل (سحابية Real-time) -->
     <div id="admin-dashboard" class="fixed inset-0 bg-black/95 hidden z-50 overflow-y-auto p-4">
         <div class="max-w-md mx-auto space-y-4 py-6">
-            <div class="flex justify-between items-center border-b border-purple-950 pb-3">
-                <h3 class="font-black text-base text-pink-400">🔐 لوحة تحكم Vanilla Store</h3>
-                <button onclick="closeAdminDashboard()" class="bg-gray-900 px-3.5 py-2 rounded-xl text-xs text-white cursor-pointer font-bold border border-gray-800">إغلاق ✕</button>
+            <div class="flex justify-between items-center border-b border-white/10 pb-3">
+                <h3 class="font-black text-base text-white">🔐 لوحة تحكم Vanilla Store</h3>
+                <button onclick="closeAdminDashboard()" class="bg-zinc-900 px-3.5 py-2 rounded-xl text-xs text-white cursor-pointer font-bold border border-white/10">إغلاق ✕</button>
             </div>
 
-            <!-- التحكم في شاشة العروض والبانر الإعلاني وصورة اللوجو -->
+            <!-- التحكم في المظهر واللوجو والعروض -->
             <div class="vanilla-card p-4 rounded-2xl space-y-3">
-                <h4 class="font-bold text-pink-400 text-xs">🎨 إعدادات المظهر واللوجو والعروض:</h4>
+                <h4 class="font-bold text-white text-xs">🎨 إعدادات المظهر واللوجو والعروض:</h4>
                 <div>
-                    <label class="block text-gray-400 text-[11px] mb-1">نص الشريط الإعلاني فوق (Promo Banner):</label>
-                    <input type="text" id="admin-banner-text" placeholder="اكتب نص العرض أو التنبيه..." class="w-full bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white">
+                    <label class="block text-zinc-400 text-[11px] mb-1">نص الشريط الإعلاني فوق:</label>
+                    <input type="text" id="admin-banner-text" placeholder="اكتب نص العرض أو التنبيه..." class="w-full bg-black/60 border border-white/10 rounded-xl px-3 py-2 text-xs text-white">
                 </div>
                 <div>
-                    <label class="block text-gray-400 text-[11px] mb-1">رفع صورة اللوجو الجديدة للمتجر:</label>
-                    <input type="file" id="logo-img-file" accept="image/*" class="w-full text-xs text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-pink-600 file:text-white hover:file:bg-pink-500 cursor-pointer">
+                    <label class="block text-zinc-400 text-[11px] mb-1">رفع صورة اللوجو (مطابق للوجو الأصلي):</label>
+                    <input type="file" id="logo-img-file" accept="image/*" class="w-full text-xs text-zinc-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-white file:text-black hover:file:bg-zinc-200 cursor-pointer">
                 </div>
-                <button onclick="saveThemeAndBannerSettings()" class="w-full bg-pink-600 text-white text-xs py-2.5 rounded-xl font-bold cursor-pointer">حفظ مظهر المتجر والعروض 💾</button>
+                <button onclick="saveThemeAndBannerSettings()" class="w-full bg-white text-black text-xs py-2.5 rounded-xl font-black cursor-pointer hover:bg-zinc-200 transition">حفظ المظهر والشريط 💾</button>
             </div>
 
-            <!-- إعدادات المتجر والدفع مع اسم صاحب المحفظة -->
+            <!-- إعدادات المتجر والدفع -->
             <div class="vanilla-card p-4 rounded-2xl space-y-3">
                 <h4 class="font-bold text-white text-xs">⚙️ إعدادات المتجر والدفع:</h4>
                 <div>
-                    <label class="block text-gray-400 text-[11px] mb-1">رقم واتساب الأوردرات:</label>
-                    <input type="text" id="admin-whatsapp" placeholder="201000000000..." class="w-full bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white">
+                    <label class="block text-zinc-400 text-[11px] mb-1">رقم واتساب الأوردرات:</label>
+                    <input type="text" id="admin-whatsapp" placeholder="201000000000..." class="w-full bg-black/60 border border-white/10 rounded-xl px-3 py-2 text-xs text-white">
                 </div>
                 <div>
-                    <label class="block text-gray-400 text-[11px] mb-1">حساب انستاباي (InstaPay Username):</label>
-                    <input type="text" id="instapay-link" placeholder="store@instapay..." class="w-full bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white">
+                    <label class="block text-zinc-400 text-[11px] mb-1">حساب انستاباي:</label>
+                    <input type="text" id="instapay-link" placeholder="store@instapay..." class="w-full bg-black/60 border border-white/10 rounded-xl px-3 py-2 text-xs text-white">
                 </div>
                 <div class="grid grid-cols-3 gap-1.5">
                     <div>
-                        <label class="block text-gray-400 text-[10px] mb-1">اسم المحفظة:</label>
-                        <input type="text" id="wallet-name" placeholder="فودافون كاش" class="w-full bg-gray-900 border border-gray-800 rounded-xl px-2.5 py-2 text-xs text-white">
+                        <label class="block text-zinc-400 text-[10px] mb-1">اسم المحفظة:</label>
+                        <input type="text" id="wallet-name" placeholder="فودافون كاش" class="w-full bg-black/60 border border-white/10 rounded-xl px-2 py-2 text-xs text-white">
                     </div>
                     <div>
-                        <label class="block text-gray-400 text-[10px] mb-1">رقم المحفظة:</label>
-                        <input type="text" id="wallet-number" placeholder="010..." class="w-full bg-gray-900 border border-gray-800 rounded-xl px-2.5 py-2 text-xs text-white">
+                        <label class="block text-zinc-400 text-[10px] mb-1">رقم المحفظة:</label>
+                        <input type="text" id="wallet-number" placeholder="010..." class="w-full bg-black/60 border border-white/10 rounded-xl px-2 py-2 text-xs text-white">
                     </div>
                     <div>
-                        <label class="block text-gray-400 text-[10px] mb-1">اسم صاحبها:</label>
-                        <input type="text" id="wallet-owner" placeholder="محمد أحمد" class="w-full bg-gray-900 border border-gray-800 rounded-xl px-2.5 py-2 text-xs text-white">
+                        <label class="block text-zinc-400 text-[10px] mb-1">اسم صاحبها:</label>
+                        <input type="text" id="wallet-owner" placeholder="محمد أحمد" class="w-full bg-black/60 border border-white/10 rounded-xl px-2 py-2 text-xs text-white">
                     </div>
                 </div>
-                <button onclick="saveStoreSettings()" class="w-full bg-pink-600 text-white text-xs py-2.5 rounded-xl font-bold cursor-pointer">حفظ إعدادات الدفع 💾</button>
+                <button onclick="saveStoreSettings()" class="w-full bg-white text-black text-xs py-2.5 rounded-xl font-black cursor-pointer hover:bg-zinc-200 transition">حفظ إعدادات الدفع 💾</button>
             </div>
 
-            <!-- مربعات روابط السوشيال ميديا واللوكيشن -->
+            <!-- مربعات السوشيال ميديا واللوكيشن -->
             <div class="vanilla-card p-4 rounded-2xl space-y-3">
-                <h4 class="font-bold text-pink-400 text-xs">🌐 مربعات السوشيال ميديا واللوكيشن:</h4>
-                <div>
-                    <label class="block text-gray-400 text-[11px] mb-1">📘 فيسبوك (Facebook):</label>
-                    <input type="text" id="social-fb" placeholder="رابط الفيسبوك..." class="w-full bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white">
-                </div>
-                <div>
-                    <label class="block text-gray-400 text-[11px] mb-1">📸 انستجرام (Instagram):</label>
-                    <input type="text" id="social-ig" placeholder="رابط انستجرام..." class="w-full bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white">
-                </div>
-                <div>
-                    <label class="block text-gray-400 text-[11px] mb-1">🎵 تيك توك (TikTok):</label>
-                    <input type="text" id="social-tt" placeholder="رابط تيك توك..." class="w-full bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white">
-                </div>
-                <div>
-                    <label class="block text-gray-400 text-[11px] mb-1">✈️ تليجرام (Telegram):</label>
-                    <input type="text" id="social-tg" placeholder="رابط تليجرام..." class="w-full bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white">
-                </div>
-                <div>
-                    <label class="block text-gray-400 text-[11px] mb-1">💬 واتساب مباشر (WhatsApp):</label>
-                    <input type="text" id="social-wa" placeholder="رابط واتساب..." class="w-full bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white">
-                </div>
-                <div>
-                    <label class="block text-gray-400 text-[11px] mb-1">📍 لوكيشن المحل (Google Maps):</label>
-                    <input type="text" id="store-location" placeholder="رابط خرائط جوجل..." class="w-full bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white">
-                </div>
-                <button onclick="saveSocialSettings()" class="w-full bg-pink-600 text-white text-xs py-2.5 rounded-xl font-bold cursor-pointer">حفظ السوشيال واللوكيشن 📱</button>
+                <h4 class="font-bold text-white text-xs">🌐 مربعات السوشيال ميديا واللوكيشن:</h4>
+                <input type="text" id="social-fb" placeholder="رابط الفيسبوك..." class="w-full bg-black/60 border border-white/10 rounded-xl px-3 py-2 text-xs text-white">
+                <input type="text" id="social-ig" placeholder="رابط انستجرام..." class="w-full bg-black/60 border border-white/10 rounded-xl px-3 py-2 text-xs text-white">
+                <input type="text" id="social-tt" placeholder="رابط تيك توك..." class="w-full bg-black/60 border border-white/10 rounded-xl px-3 py-2 text-xs text-white">
+                <input type="text" id="social-tg" placeholder="رابط تليجرام..." class="w-full bg-black/60 border border-white/10 rounded-xl px-3 py-2 text-xs text-white">
+                <input type="text" id="social-wa" placeholder="رابط واتساب..." class="w-full bg-black/60 border border-white/10 rounded-xl px-3 py-2 text-xs text-white">
+                <input type="text" id="store-location" placeholder="رابط خرائط جوجل (Location)..." class="w-full bg-black/60 border border-white/10 rounded-xl px-3 py-2 text-xs text-white">
+                <button onclick="saveSocialSettings()" class="w-full bg-white text-black text-xs py-2.5 rounded-xl font-black cursor-pointer hover:bg-zinc-200 transition">حفظ السوشيال واللوكيشن 📱</button>
             </div>
 
-            <!-- إضافة منتج جديد -->
+            <!-- إضافة منتج جديد (مع تحديد نسبة الخصم إن وجد) -->
             <div class="vanilla-card p-4 rounded-2xl space-y-3">
-                <h4 class="font-bold text-pink-400 text-xs">➕ إضافة منتج جديد للمتجر:</h4>
-                <input type="text" id="p-name" placeholder="اسم المنتج..." class="w-full bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white">
-                <input type="text" id="p-cat" value="عطور فخمة 🌸" class="w-full bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white">
-                <input type="number" id="p-price" placeholder="السعر (ج.م)..." class="w-full bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white">
+                <h4 class="font-bold text-white text-xs">➕ إضافة منتج جديد (أو عرض):</h4>
+                <input type="text" id="p-name" placeholder="اسم المنتج..." class="w-full bg-black/60 border border-white/10 rounded-xl px-3 py-2 text-xs text-white">
+                <input type="text" id="p-cat" placeholder="القسم (مثال: Makeup & Accessories أو العروض 🔥)..." class="w-full bg-black/60 border border-white/10 rounded-xl px-3 py-2 text-xs text-white" value="Makeup 💄">
+                <input type="number" id="p-price" placeholder="السعر الأصلي (ج.م)..." class="w-full bg-black/60 border border-white/10 rounded-xl px-3 py-2 text-xs text-white">
+                <input type="number" id="p-discount" placeholder="نسبة الخصم % (اختياري، مثلاً 20)..." class="w-full bg-black/60 border border-white/10 rounded-xl px-3 py-2 text-xs text-white">
                 <div>
-                    <label class="block text-gray-400 text-[11px] mb-1">اختر صورة المنتج:</label>
-                    <input type="file" id="p-img-file" accept="image/*" class="w-full text-xs text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-pink-600 file:text-white hover:file:bg-pink-500 cursor-pointer">
+                    <label class="block text-zinc-400 text-[11px] mb-1">اختر صورة المنتج:</label>
+                    <input type="file" id="p-img-file" accept="image/*" class="w-full text-xs text-zinc-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-white file:text-black hover:file:bg-zinc-200 cursor-pointer">
                 </div>
-                <button onclick="addNewProductCloud()" class="w-full bg-pink-600 text-white text-xs py-2.5 rounded-xl font-bold cursor-pointer">نشر المنتج سحابياً 🚀</button>
+                <button onclick="addNewProductCloud()" class="w-full bg-white text-black text-xs py-2.5 rounded-xl font-black cursor-pointer hover:bg-zinc-200 transition">نشر المنتج سحابياً 🚀</button>
             </div>
 
-            <!-- إدارة كل الأصناف وتحديد إذا كان الصنف متاح أو خلصان -->
+            <!-- إدارة كل الأصناف وحالة التوفر والخصم -->
             <div class="space-y-2 pt-2">
-                <h4 class="font-bold text-gray-300 text-xs">📦 إدارة جميع أصناف المتجر (متاح / خلصان):</h4>
+                <h4 class="font-bold text-zinc-300 text-xs">📦 إدارة جميع أصناف المتجر (متاح / خلصان):</h4>
                 <div id="admin-products-list" class="space-y-2"></div>
             </div>
 
             <!-- أوردرات العملاء الواردة سحابياً -->
-            <div class="space-y-2 pt-4 border-t border-purple-950">
-                <h4 class="font-bold text-gray-300 text-xs">📋 أوردرات العملاء الواردة سحابياً (Real-time):</h4>
+            <div class="space-y-2 pt-4 border-t border-white/10">
+                <h4 class="font-bold text-zinc-300 text-xs">📋 أوردرات العملاء الواردة سحابياً (Real-time):</h4>
                 <div id="cloud-orders-list" class="space-y-2"></div>
             </div>
         </div>
     </div>
 
     <!-- نافذة دخول الإدارة السرية -->
-    <div id="admin-pin-modal" class="fixed inset-0 bg-black/85 backdrop-blur-sm hidden z-60 flex items-center justify-center p-4">
-        <div class="vanilla-card w-full max-w-sm p-6 rounded-3xl space-y-4">
+    <div id="admin-pin-modal" class="fixed inset-0 bg-black/90 backdrop-blur-sm hidden z-60 flex items-center justify-center p-4">
+        <div class="vanilla-card w-full max-w-sm p-6 rounded-3xl space-y-4 border border-white/20">
             <h3 class="font-black text-base text-white">🔐 أدخل الرقم السري للوحة الإدارة</h3>
-            <input type="password" id="pin-input" placeholder="••••" class="w-full bg-gray-900 border border-gray-800 rounded-2xl p-3.5 text-center text-white tracking-widest text-lg">
+            <input type="password" id="pin-input" placeholder="••••" class="w-full bg-black/60 border border-white/10 rounded-2xl p-3.5 text-center text-white tracking-widest text-lg">
             <div class="flex gap-2">
-                <button onclick="verifyAdminPin()" class="flex-1 bg-pink-600 text-white py-3 rounded-xl font-bold cursor-pointer">دخول</button>
-                <button onclick="document.getElementById('admin-pin-modal').classList.add('hidden')" class="flex-1 bg-gray-800 text-gray-300 py-3 rounded-xl cursor-pointer">إلغاء</button>
+                <button onclick="verifyAdminPin()" class="flex-1 bg-white text-black py-3 rounded-xl font-black cursor-pointer hover:bg-zinc-200 transition">دخول</button>
+                <button onclick="document.getElementById('admin-pin-modal').classList.add('hidden')" class="flex-1 bg-zinc-900 text-zinc-300 py-3 rounded-xl cursor-pointer border border-white/10">إلغاء</button>
             </div>
         </div>
     </div>
@@ -290,7 +276,7 @@
         let walletName = localStorage.getItem('vanilla_wallet_name') || "فودافون كاش";
         let walletNumber = localStorage.getItem('vanilla_wallet_num') || "01000000000";
         let walletOwner = localStorage.getItem('vanilla_wallet_owner') || "محمد أحمد";
-        let promoText = localStorage.getItem('vanilla_promo') || "✨ Vanilla Store • أناقتك تبدأ من هنا مع أرقى العطور ومستحضرات التجميل الأصلية 🌸";
+        let promoText = localStorage.getItem('vanilla_promo') || "✨ Vanilla Store • Makeup & Accessories • أناقتك تبدأ من هنا 🤍";
         let storeLogo = localStorage.getItem('vanilla_logo') || "";
         
         let socialLinks = JSON.parse(localStorage.getItem('vanilla_socials')) || {
@@ -309,18 +295,17 @@
         let products = [];
 
         let defaultProducts = [
-            { id: 1, name: "عطر فانيلا ملكي فاخر", price: 650, category: "عطور فخمة 🌸", image: "https://images.unsplash.com/photo-1523293182086-7651a899d37f?w=500", available: true },
-            { id: 2, name: "مجموعة روج سائل فانيلا مات", price: 250, category: "مكياج 💄", image: "https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=500", available: true }
+            { id: 1, name: "عطر فانيلا ملكي فاخر", price: 650, discount: 15, category: "العروض 🔥", image: "https://images.unsplash.com/photo-1523293182086-7651a899d37f?w=500", available: true },
+            { id: 2, name: "مجموعة روج سائل فانيلا مات", price: 250, discount: 0, category: "Makeup 💄", image: "https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=500", available: true }
         ];
 
-        // تطبيق اللوجو والنص الإعلاني عند التحميل
         function applyThemeSettings() {
             document.getElementById('promo-banner-bar').innerText = promoText;
             let logoContainer = document.getElementById('header-logo-container');
             if(storeLogo) {
                 logoContainer.innerHTML = `<img src="${storeLogo}" class="w-full h-full object-cover">`;
             } else {
-                logoContainer.innerHTML = `🍦`;
+                logoContainer.innerHTML = `<span class="text-2xl font-black text-black">V</span>`;
             }
         }
 
@@ -361,12 +346,12 @@
         function renderFooterSocials() {
             let container = document.getElementById('footer-socials');
             container.innerHTML = `
-                <a href="${socialLinks.fb}" target="_blank" class="bg-gray-900 border border-gray-800 text-pink-300 text-xs p-3 rounded-xl font-bold flex items-center justify-center gap-1.5 hover:bg-gray-800">📘 فيسبوك</a>
-                <a href="${socialLinks.ig}" target="_blank" class="bg-gray-900 border border-gray-800 text-pink-300 text-xs p-3 rounded-xl font-bold flex items-center justify-center gap-1.5 hover:bg-gray-800">📸 انستجرام</a>
-                <a href="${socialLinks.tt}" target="_blank" class="bg-gray-900 border border-gray-800 text-pink-300 text-xs p-3 rounded-xl font-bold flex items-center justify-center gap-1.5 hover:bg-gray-800">🎵 تيك توك</a>
-                <a href="${socialLinks.tg}" target="_blank" class="bg-gray-900 border border-gray-800 text-pink-300 text-xs p-3 rounded-xl font-bold flex items-center justify-center gap-1.5 hover:bg-gray-800">✈ تليجرام</a>
-                <a href="${socialLinks.wa}" target="_blank" class="bg-gray-900 border border-gray-800 text-emerald-400 text-xs p-3 rounded-xl font-bold flex items-center justify-center gap-1.5 hover:bg-gray-800">💬 واتساب</a>
-                <a href="${socialLinks.location}" target="_blank" class="bg-gray-900 border border-gray-800 text-cyan-400 text-xs p-3 rounded-xl font-bold flex items-center justify-center gap-1.5 hover:bg-gray-800">📍 لوكيشن المحل</a>
+                <a href="${socialLinks.fb}" target="_blank" class="bg-black/60 border border-white/10 text-zinc-200 text-xs p-3 rounded-xl font-bold flex items-center justify-center gap-1.5 hover:bg-zinc-800 transition">📘 فيسبوك</a>
+                <a href="${socialLinks.ig}" target="_blank" class="bg-black/60 border border-white/10 text-zinc-200 text-xs p-3 rounded-xl font-bold flex items-center justify-center gap-1.5 hover:bg-zinc-800 transition">📸 انستجرام</a>
+                <a href="${socialLinks.tt}" target="_blank" class="bg-black/60 border border-white/10 text-zinc-200 text-xs p-3 rounded-xl font-bold flex items-center justify-center gap-1.5 hover:bg-zinc-800 transition">🎵 تيك توك</a>
+                <a href="${socialLinks.tg}" target="_blank" class="bg-black/60 border border-white/10 text-zinc-200 text-xs p-3 rounded-xl font-bold flex items-center justify-center gap-1.5 hover:bg-zinc-800 transition">✈ تليجرام</a>
+                <a href="${socialLinks.wa}" target="_blank" class="bg-black/60 border border-white/10 text-emerald-400 text-xs p-3 rounded-xl font-bold flex items-center justify-center gap-1.5 hover:bg-zinc-800 transition">💬 واتساب</a>
+                <a href="${socialLinks.location}" target="_blank" class="bg-black/60 border border-white/10 text-cyan-400 text-xs p-3 rounded-xl font-bold flex items-center justify-center gap-1.5 hover:bg-zinc-800 transition">📍 لوكيشن المحل</a>
             `;
         }
 
@@ -379,15 +364,15 @@
             let instapayBtn = document.getElementById('instapay-direct-btn');
             let copyBtn = document.getElementById('copy-wallet-btn');
 
-            let cartTotal = cart.reduce((s, i) => s + (i.price * i.qty), 0);
+            let cartTotal = cart.reduce((s, i) => s + (i.finalPrice * i.qty), 0);
 
             if(method === 'COD') {
-                codBtn.className = "p-3 rounded-2xl text-xs font-bold border border-pink-500 bg-pink-600 text-white cursor-pointer";
-                onlineBtn.className = "p-3 rounded-2xl text-xs font-bold border border-gray-800 bg-gray-900 text-gray-300 cursor-pointer";
+                codBtn.className = "p-3 rounded-2xl text-xs font-bold border border-white bg-white text-black cursor-pointer";
+                onlineBtn.className = "p-3 rounded-2xl text-xs font-bold border border-white/20 bg-black/50 text-zinc-300 cursor-pointer";
                 box.classList.add('hidden');
             } else {
-                onlineBtn.className = "p-3 rounded-2xl text-xs font-bold border border-pink-500 bg-pink-600 text-white cursor-pointer";
-                codBtn.className = "p-3 rounded-2xl text-xs font-bold border border-gray-800 bg-gray-900 text-gray-300 cursor-pointer";
+                onlineBtn.className = "p-3 rounded-2xl text-xs font-bold border border-white bg-white text-black cursor-pointer";
+                codBtn.className = "p-3 rounded-2xl text-xs font-bold border border-white/20 bg-black/50 text-zinc-300 cursor-pointer";
                 box.classList.remove('hidden');
                 
                 inst.innerHTML = `💳 تفاصيل الدفع الإلكتروني:<br>• انستاباي: <b>${instapay}</b><br>• ${walletName}: <b>${walletNumber}</b> (باسم: <b>${walletOwner}</b>)<br>الإجمالي المطلوب: <b>${cartTotal} ج.م</b>`;
@@ -425,12 +410,17 @@
                     return;
                 }
                 products = [];
-                snapshot.forEach(doc => { products.push(doc.data()); });
+                snapshot.forEach(doc => {
+                    let d = doc.data();
+                    let disc = d.discount || 0;
+                    let final = disc > 0 ? Math.round(d.price * (1 - disc / 100)) : d.price;
+                    products.push({ ...d, finalPrice: final });
+                });
                 renderCategories();
                 renderProducts();
                 renderAdminProductsList();
             }, error => {
-                products = defaultProducts;
+                products = defaultProducts.map(d => ({ ...d, finalPrice: d.discount > 0 ? Math.round(d.price * (1 - d.discount / 100)) : d.price }));
                 renderCategories();
                 renderProducts();
             });
@@ -438,12 +428,12 @@
 
         function renderCategories() {
             let bar = document.getElementById('categories-bar');
-            let cats = ["الكل"];
+            let cats = ["الكل", "العروض 🔥"];
             products.forEach(p => { if(p.available !== false && !cats.includes(p.category)) cats.push(p.category); });
             bar.innerHTML = "";
             cats.forEach(c => {
                 let active = currentCategory === c;
-                bar.innerHTML += `<button onclick="filterCat('${c}')" class="text-xs px-4 py-2 rounded-xl cursor-pointer whitespace-nowrap ${active ? 'bg-pink-600 font-bold text-white shadow-md' : 'vanilla-card text-gray-300'}">${c}</button>`;
+                bar.innerHTML += `<button onclick="filterCat('${c}')" class="text-xs px-4 py-2 rounded-xl cursor-pointer whitespace-nowrap ${active ? 'bg-white font-black text-black shadow-lg' : 'vanilla-card text-zinc-300'}">${c}</button>`;
             });
         }
 
@@ -452,23 +442,38 @@
         function renderProducts() {
             let grid = document.getElementById('products-grid');
             grid.innerHTML = "";
-            let filtered = products.filter(p => p.available !== false && (currentCategory === "الكل" || p.category === currentCategory));
+            
+            let filtered = products.filter(p => {
+                if(p.available === false) return false;
+                if(currentCategory === "الكل") return true;
+                if(currentCategory === "العروض 🔥") return (p.discount && p.discount > 0) || p.category === "العروض 🔥";
+                return p.category === currentCategory;
+            });
             
             if(filtered.length === 0) {
-                grid.innerHTML = `<p class="text-xs text-gray-500 text-center py-6 col-span-2">لا توجد منتجات متاحة في هذا القسم حالياً..</p>`;
+                grid.innerHTML = `<p class="text-xs text-zinc-500 text-center py-6 col-span-2">لا توجد منتجات متاحة في هذا القسم حالياً..</p>`;
                 return;
             }
 
             filtered.forEach((p) => {
+                let discBadge = p.discount > 0 ? `<span class="absolute top-2 right-2 bg-white text-black text-[10px] font-black px-2.5 py-1 rounded-full shadow-lg">خصم ${p.discount}% 🔥</span>` : '';
+                let priceHtml = p.discount > 0 ? `
+                    <div class="flex items-center gap-1.5">
+                        <span class="text-white font-black text-xs">${p.finalPrice} ج.م</span>
+                        <span class="text-zinc-500 text-[10px] line-through">${p.price} ج.م</span>
+                    </div>
+                ` : `<span class="text-white font-black text-xs">${p.price} ج.م</span>`;
+
                 grid.innerHTML += `
-                    <div class="vanilla-card p-3 rounded-3xl flex flex-col justify-between space-y-2 shadow">
-                        <img src="${p.image}" class="w-full h-28 object-cover rounded-2xl border border-purple-950">
+                    <div class="vanilla-card p-3 rounded-3xl flex flex-col justify-between space-y-2 shadow relative overflow-hidden">
+                        ${discBadge}
+                        <img src="${p.image}" class="w-full h-28 object-cover rounded-2xl border border-white/10">
                         <div>
-                            <span class="text-[9px] bg-pink-950 text-pink-400 px-2 py-0.5 rounded font-bold">${p.category}</span>
+                            <span class="text-[9px] bg-white/10 text-zinc-300 px-2 py-0.5 rounded font-bold">${p.category}</span>
                             <h4 class="font-bold text-white text-xs mt-1 line-clamp-1">${p.name}</h4>
-                            <span class="text-pink-400 font-black text-xs">${p.price} ج.م</span>
+                            ${priceHtml}
                         </div>
-                        <button onclick="addToCart('${p.id}')" class="w-full bg-pink-600 hover:bg-pink-500 text-white py-2 rounded-xl text-xs font-bold cursor-pointer">إضافة للسلة 🛍️</button>
+                        <button onclick="addToCart('${p.id}')" class="w-full bg-white hover:bg-zinc-200 text-black py-2 rounded-xl text-xs font-black cursor-pointer transition">إضافة للسلة 🛍️</button>
                     </div>
                 `;
             });
@@ -478,19 +483,19 @@
             let list = document.getElementById('admin-products-list');
             if(!list) return;
             if(products.length === 0) {
-                list.innerHTML = `<p class="text-xs text-gray-500 text-center py-2">لا توجد منتجات..</p>`;
+                list.innerHTML = `<p class="text-xs text-zinc-500 text-center py-2">لا توجد منتجات..</p>`;
                 return;
             }
             list.innerHTML = "";
             products.forEach(p => {
                 let isAvail = p.available !== false;
                 list.innerHTML += `
-                    <div class="flex justify-between items-center bg-gray-900 p-2.5 rounded-xl border border-gray-800 text-xs">
+                    <div class="flex justify-between items-center bg-black/60 p-2.5 rounded-xl border border-white/10 text-xs">
                         <div class="flex items-center gap-2">
-                            <img src="${p.image}" class="w-9 h-9 object-cover rounded-lg">
+                            <img src="${p.image}" class="w-9 h-9 object-cover rounded-lg border border-white/10">
                             <div>
-                                <p class="font-bold text-white">${p.name}</p>
-                                <span class="text-pink-400">${p.price} ج.م</span>
+                                <p class="font-bold text-white">${p.name} ${p.discount ? `(خصم ${p.discount}%)` : ''}</p>
+                                <span class="text-zinc-300">${p.finalPrice} ج.م</span>
                             </div>
                         </div>
                         <div class="flex items-center gap-2">
@@ -505,9 +510,7 @@
         }
 
         async function toggleProductStatus(id, newStatus) {
-            try {
-                await db.collection("vanilla_products").doc(id).update({ available: newStatus });
-            } catch(err) { alert("خطأ: " + err.message); }
+            try { await db.collection("vanilla_products").doc(id).update({ available: newStatus }); } catch(err) { alert("خطأ: " + err.message); }
         }
 
         async function deleteProduct(id) {
@@ -538,7 +541,7 @@
             countEl.innerText = totalQty;
 
             if(cart.length === 0) {
-                container.innerHTML = `<p class="text-center text-gray-500 py-6">السلة فارغة..</p>`;
+                container.innerHTML = `<p class="text-center text-zinc-500 py-6">السلة فارغة..</p>`;
                 totalEl.innerText = "0 ج.م";
                 return;
             }
@@ -546,12 +549,12 @@
             container.innerHTML = "";
             let total = 0;
             cart.forEach((i, idx) => {
-                let sub = i.price * i.qty;
+                let sub = i.finalPrice * i.qty;
                 total += sub;
                 container.innerHTML += `
-                    <div class="flex justify-between items-center bg-gray-900 p-2.5 rounded-xl border border-gray-800">
-                        <div><p class="font-bold text-white">${i.name}</p><p class="text-[10px] text-gray-400">العدد: ${i.qty}</p></div>
-                        <div class="flex items-center gap-2"><span class="text-pink-400 font-bold">${sub} ج.م</span><button onclick="cart.splice(${idx},1);renderCart();" class="text-red-400 cursor-pointer">✕</button></div>
+                    <div class="flex justify-between items-center bg-black/60 p-2.5 rounded-xl border border-white/10">
+                        <div><p class="font-bold text-white">${i.name}</p><p class="text-[10px] text-zinc-400">العدد: ${i.qty}</p></div>
+                        <div class="flex items-center gap-2"><span class="text-white font-bold">${sub} ج.م</span><button onclick="cart.splice(${idx},1);renderCart();" class="text-red-400 cursor-pointer">✕</button></div>
                     </div>
                 `;
             });
@@ -568,7 +571,7 @@
             if(paymentMethod === 'ONLINE' && !transferScreenBase64) { alert("من فضلك ارفع سكرين شوت التحويل الإلكتروني!"); return; }
 
             let orderId = "#VAN-" + Math.floor(1000 + Math.random() * 9000);
-            let total = cart.reduce((s, i) => s + (i.price * i.qty), 0);
+            let total = cart.reduce((s, i) => s + (i.finalPrice * i.qty), 0);
 
             let orderData = {
                 orderId: orderId,
@@ -587,7 +590,7 @@
                 await db.collection("vanilla_orders").add(orderData);
 
                 let text = `🛍️ أوردر جديد من Vanilla Store:\n📌 رقم الأوردر: ${orderId}\n👤 العميلة: ${name}\n📞 الهاتف: ${phone}\n📍 العنوان: ${address}\n💳 طريقة الدفع: ${orderData.payment}\n\nالمنتجات:\n`;
-                cart.forEach(i => { text += `- ${i.name} (عدد: ${i.qty}) | ${i.price * i.qty} ج.م\n`; });
+                cart.forEach(i => { text += `- ${i.name} (عدد: ${i.qty}) | ${i.finalPrice * i.qty} ج.م\n`; });
                 text += `\n💰 الإجمالي الكلي: ${total} ج.م`;
                 if(transferScreenBase64) { text += `\n\n📸 (تم إرفاق سكرين شوت التحويل في النظام سحابياً)`; }
 
@@ -603,21 +606,21 @@
             let list = document.getElementById('cloud-orders-list');
             db.collection("vanilla_orders").orderBy("createdAt", "desc").onSnapshot(snapshot => {
                 if(snapshot.empty) {
-                    list.innerHTML = `<p class="text-xs text-gray-500 text-center py-3">لا توجد أوردرات حالياً..</p>`;
+                    list.innerHTML = `<p class="text-xs text-zinc-500 text-center py-3">لا توجد أوردرات حالياً..</p>`;
                     return;
                 }
                 list.innerHTML = "";
                 snapshot.forEach(doc => {
                     let o = doc.data();
                     let itemsStr = o.items ? o.items.map(i => `• ${i.name} (عدد ${i.qty})`).join('<br>') : '';
-                    let screenHtml = o.transferScreen ? `<a href="${o.transferScreen}" target="_blank" class="block bg-pink-950/40 text-pink-400 text-center py-1.5 rounded-lg font-bold border border-pink-500/30 mt-2">👁️ عرض سكرين شوت التحويل</a>` : '';
+                    let screenHtml = o.transferScreen ? `<a href="${o.transferScreen}" target="_blank" class="block bg-zinc-900 text-white text-center py-1.5 rounded-lg font-bold border border-white/20 mt-2">👁️ عرض سكرين شوت التحويل</a>` : '';
                     
                     list.innerHTML += `
-                        <div class="vanilla-card p-3 rounded-xl text-xs space-y-1.5 border border-pink-500/30">
-                            <div class="flex justify-between font-bold text-pink-400"><span>${o.orderId} - ${o.name}</span><span>${o.total} ج.م</span></div>
-                            <p class="text-gray-300">📞 ${o.phone} | 📍 ${o.address}</p>
-                            <p class="text-emerald-300 font-semibold">💳 ${o.payment}</p>
-                            <div class="bg-gray-900 p-2 rounded text-gray-300">${itemsStr}</div>
+                        <div class="vanilla-card p-3 rounded-xl text-xs space-y-1.5 border border-white/10">
+                            <div class="flex justify-between font-bold text-white"><span>${o.orderId} - ${o.name}</span><span>${o.total} ج.م</span></div>
+                            <p class="text-zinc-300">📞 ${o.phone} | 📍 ${o.address}</p>
+                            <p class="text-emerald-400 font-semibold">💳 ${o.payment}</p>
+                            <div class="bg-black/60 p-2 rounded text-zinc-300 border border-white/10">${itemsStr}</div>
                             ${screenHtml}
                             <p class="text-emerald-400 font-bold mt-1">${o.status}</p>
                         </div>
@@ -630,17 +633,19 @@
             let name = document.getElementById('p-name').value.trim();
             let cat = document.getElementById('p-cat').value.trim();
             let price = parseFloat(document.getElementById('p-price').value);
+            let discount = parseFloat(document.getElementById('p-discount').value) || 0;
             let imgFile = document.getElementById('p-img-file').files[0];
 
             if(!name || isNaN(price)) { alert("أدخل اسم المنتج والسعر بشكل صحيح!"); return; }
 
             let saveToDb = (imgUrl) => {
                 let newId = Date.now().toString();
-                let newProd = { id: newId, name, category: cat, price, image: imgUrl, available: true };
+                let newProd = { id: newId, name, category: cat, price, discount, image: imgUrl, available: true };
                 db.collection("vanilla_products").doc(newId).set(newProd).then(() => {
                     alert("تم نشر المنتج سحابياً بنجاح! ✨");
                     document.getElementById('p-name').value = "";
                     document.getElementById('p-price').value = "";
+                    document.getElementById('p-discount').value = "";
                     document.getElementById('p-img-file').value = "";
                 }).catch(err => alert("خطأ: " + err.message));
             };
