@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glamour | متجر مستحضرات التجميل والعطور السحابي</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Google Fonts (Cairo) -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+    <style>
+        body { font-family: 'Cairo', sans-serif; background-color: #121016; color: #fdfcff; }
+        .glam-card { background: rgba(30, 24, 39, 0.85); backdrop-filter: blur(14px); border: 1px solid rgba(236, 72, 153, 0.2); }
+        .pink-glow { box-shadow: 0 0 30px rgba(236, 72, 153, 0.2); }
+        .pink-border { border: 1px solid rgba(236, 72, 153, 0.4); }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="min-h-screen pb-28 selection:bg-pink-600 selection:text-white">
+
+    <!-- شريط إعلاني فخم -->
+    <div class="bg-gradient-to-r from-pink-700 via-rose-600 to-purple-800 text-white text-[11px] font-bold py-2 px-4 text-center tracking-wider shadow-lg">
+        ✨ عطور أصلية ومستحضرات تجميل عالمية • اطلبدي أوردرك من بيتك يوصلك لحد باب البيت 🌸
+    </div>
+
+    <!-- الهيدر -->
+    <header class="glam-card border-b border-purple-950 p-4 sticky top-0 z-40">
+        <div class="max-w-md mx-auto flex justify-between items-center">
+            <div onclick="handleLogoClick()" class="flex items-center gap-3 cursor-pointer select-none" title="اضغط 5 مرات لفتح لوحة الإدارة">
+                <div class="w-12 h-12 bg-gradient-to-tr from-pink-500 to-rose-600 rounded-2xl flex items-center justify-center font-black text-xl pink-glow text-white shadow-lg shadow-pink-600/30">
+                    💄
+                </div>
+                <div class="text-right">
+                    <h1 class="font-black text-base text-white tracking-wide">غالية وبس 💋</h1>
+                    <p class="text-[10px] text-pink-400 font-semibold">Cloud Cosmetics & Perfumes</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <button onclick="openAdminLogin()" class="bg-gray-900 border border-gray-800 text-pink-400 text-xs px-3.5 py-2 rounded-xl font-bold flex items-center gap-1.5 cursor-pointer hover:bg-gray-800">
+                    🔐 لوحة المحل
+                </button>
+                <span class="bg-pink-500/20 border border-pink-500/40 text-pink-400 text-xs px-3.5 py-2 rounded-xl font-bold flex items-center gap-1.5">
+                    🛍️ <span id="cart-count">0</span>
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <!-- المحتوى الرئيسي -->
+    <main class="max-w-md mx-auto p-4 space-y-5">
+        
+        <!-- بانر ترحيبي -->
+        <div class="glam-card p-5 rounded-3xl pink-glow text-center space-y-2 pink-border">
+            <span class="bg-pink-600/20 text-pink-300 text-[10px] font-extrabold px-3 py-1 rounded-full border border-pink-500/30 uppercase tracking-wider">مستحضرات أصلية 100%</span>
+            <h2 class="font-black text-lg text-white">تألقي بأفضل إطلالة وعطور مميزة</h2>
+            <p class="text-xs text-gray-300">تسوقي من تشكيلة المكياج والعطور الفاخرة بكل سهولة.</p>
+        </div>
+
+        <!-- تصفح أقسام المنتجات -->
+        <div>
+            <div class="flex justify-between items-center mb-2">
+                <h3 class="font-bold text-xs text-gray-400 uppercase tracking-wider">📂 أقسام المتجر</h3>
+            </div>
+            <div id="categories-bar" class="flex gap-2 overflow-x-auto no-scrollbar pb-1"></div>
+        </div>
+
+        <!-- قائمة المنتجات -->
+        <div id="products-grid" class="grid grid-cols-2 gap-3.5"></div>
+
+        <!-- سلة المشتريات -->
+        <div class="glam-card p-4 rounded-3xl space-y-3 shadow-xl pink-border mt-8">
+            <div class="flex justify-between items-center border-b border-purple-950 pb-2.5">
+                <h4 class="font-bold text-sm text-white flex items-center gap-2">🛒 سلة المشتريات</h4>
+                <span id="cart-total-badge" class="text-pink-400 font-bold text-xs">0 ج.م</span>
+            </div>
+            
+            <div id="cart-items" class="space-y-2 text-xs text-gray-300">
+                <p class="text-center text-gray-500 py-3">السلة فارغة..</p>
+            </div>
+
+            <div class="flex justify-between items-center pt-3 border-t border-purple-950 font-bold text-sm">
+                <span class="text-gray-400">الإجمالي الكلي:</span>
+                <span id="cart-total" class="text-pink-400 text-base">0 ج.م</span>
+            </div>
+        </div>
+
+        <!-- بيانات العميل وإرسال الأوردر سحابياً -->
+        <div class="glam-card p-5 rounded-3xl pink-border space-y-3.5 shadow-xl">
+            <h4 class="font-bold text-sm text-white flex items-center gap-1.5">📍 بيانات التوصيل للعميلة:</h4>
+            
+            <input type="text" id="cust-name" placeholder="اسمك الكريم..." class="w-full bg-gray-900 border border-gray-800 rounded-2xl p-3.5 text-xs text-white focus:outline-none focus:border-pink-500">
+            <input type="text" id="cust-phone" placeholder="رقم الموبايل للتواصل..." class="w-full bg-gray-900 border border-gray-800 rounded-2xl p-3.5 text-xs text-white focus:outline-none focus:border-pink-500">
+            <input type="text" id="cust-address" placeholder="العنوان بالتفصيل (المدينة/الشارع)..." class="w-full bg-gray-900 border border-gray-800 rounded-2xl p-3.5 text-xs text-white focus:outline-none focus:border-pink-500">
+            
+            <button onclick="sendOrderCloud()" class="w-full bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-500 hover:to-rose-500 text-white font-black py-4 rounded-2xl transition shadow-xl shadow-pink-900/40 flex items-center justify-center gap-2 cursor-pointer text-sm">
+                ☁️ إرسال الأوردر للمحل سحابياً وعبر الواتساب 🚀
+            </button>
+        </div>
+
+    </main>
+
+    <!-- لوحة تحكم المحل (سحابية Real-time) -->
+    <div id="admin-dashboard" class="fixed inset-0 bg-black/95 hidden z-50 overflow-y-auto p-4">
+        <div class="max-w-md mx-auto space-y-4 py-6">
+            <div class="flex justify-between items-center border-b border-purple-950 pb-3">
+                <h3 class="font-black text-base text-pink-400">🔐 لوحة تحكم المحل (Cloud Orders)</h3>
+                <button onclick="closeAdminDashboard()" class="bg-gray-900 px-3.5 py-2 rounded-xl text-xs text-white cursor-pointer font-bold border border-gray-800">إغلاق ✕</button>
+            </div>
+
+            <!-- إعدادات واتساب المحل -->
+            <div class="glam-card p-4 rounded-2xl space-y-3">
+                <h4 class="font-bold text-white text-xs">⚙ رقم واتساب استقبال الأوردرات:</h4>
+                <input type="text" id="admin-whatsapp" placeholder="201000000000..." class="w-full bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white">
+                <button onclick="saveAdminSettings()" class="w-full bg-pink-600 text-white text-xs py-2.5 rounded-xl font-bold cursor-pointer">حفظ الرقم 💾</button>
+            </div>
+
+            <!-- إضافة منتج تجميل جديد سحابياً -->
+            <div class="glam-card p-4 rounded-2xl space-y-3">
+                <h4 class="font-bold text-pink-400 text-xs">➕ إضافة مستحضر أو عطر جديد:</h4>
+                <input type="text" id="p-name" placeholder="اسم المنتج (مثال: روج مات ثابت)..." class="w-full bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white">
+                <input type="text" id="p-cat" value="مكياج 💄" class="w-full bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white">
+                <input type="number" id="p-price" placeholder="السعر (ج.م)..." class="w-full bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white">
+                <input type="text" id="p-img" placeholder="رابط صورة المنتج (URL)..." class="w-full bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white">
+                <button onclick="addNewProductCloud()" class="w-full bg-pink-600 text-white text-xs py-2.5 rounded-xl font-bold cursor-pointer">نشر المنتج للمتجر 🚀</button>
+            </div>
+
+            <!-- أوردرات العملاء الواردة سحابياً باللحظة -->
+            <div class="space-y-2 pt-2">
+                <h4 class="font-bold text-gray-300 text-xs">📦 أوردرات العملاء الواردة سحابياً (Real-time):</h4>
+                <div id="cloud-orders-list" class="space-y-2"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة دخول الإدارة السرية -->
+    <div id="admin-pin-modal" class="fixed inset-0 bg-black/85 backdrop-blur-sm hidden z-60 flex items-center justify-center p-4">
+        <div class="glam-card w-full max-w-sm p-6 rounded-3xl space-y-4">
+            <h3 class="font-black text-base text-white">🔐 أدخل الرقم السري للوحة الإدارة</h3>
+            <input type="password" id="pin-input" placeholder="••••" class="w-full bg-gray-900 border border-gray-800 rounded-2xl p-3.5 text-center text-white tracking-widest text-lg">
+            <div class="flex gap-2">
+                <button onclick="verifyAdminPin()" class="flex-1 bg-pink-600 text-white py-3 rounded-xl font-bold cursor-pointer">دخول</button>
+                <button onclick="document.getElementById('admin-pin-modal').classList.add('hidden')" class="flex-1 bg-gray-800 text-gray-300 py-3 rounded-xl cursor-pointer">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- الكود البرمجي وسماحية الفايربيس السحابية -->
+    <script>
+        // ⚡ بيانات فايربيس السحابية:
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+        const db = firebase.firestore();
+
+        let adminWhatsApp = localStorage.getItem('glam_whatsapp') || "201000000000";
+        let cart = [];
+        let currentCategory = "الكل";
+        let defaultProducts = [
+            { id: 1, name: "عطر شانيل الفاخر 100مل", price: 650, category: "عطور فخمة 🌸", image: "https://images.unsplash.com/photo-1523293182086-7651a899d37f?w=500" },
+            { id: 2, name: "مجموعة روج سائل ثابت مات", price: 250, category: "مكياج 💄", image: "https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=500" },
+            { id: 3, name: "بالت إيشادو عيون براق", price: 340, category: "مكياج 💄", image: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=500" },
+            { id: 4, name: "سيروم العناية بالبشرة فيتامين C", price: 290, category: "عناية بالبشرة ✨", image: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=500" }
+        ];
+
+        let products = defaultProducts;
+
+        let logoClicks = 0;
+        function handleLogoClick() {
+            logoClicks++;
+            if(logoClicks === 5) {
+                logoClicks = 0;
+                document.getElementById('admin-pin-modal').classList.remove('hidden');
+            }
+        }
+
+        function verifyAdminPin() {
+            let pin = document.getElementById('pin-input').value;
+            if(pin === "1234") {
+                document.getElementById('admin-pin-modal').classList.add('hidden');
+                document.getElementById('pin-input').value = "";
+                document.getElementById('admin-dashboard').classList.remove('hidden');
+                document.getElementById('admin-whatsapp').value = adminWhatsApp;
+                loadCloudOrdersRealtime();
+            } else { alert("الرقم السري خاطئ!"); }
+        }
+
+        function closeAdminDashboard() { document.getElementById('admin-dashboard').classList.add('hidden'); }
+
+        function renderCategories() {
+            let bar = document.getElementById('categories-bar');
+            let cats = ["الكل"];
+            products.forEach(p => { if(!cats.includes(p.category)) cats.push(p.category); });
+            bar.innerHTML = "";
+            cats.forEach(c => {
+                let active = currentCategory === c;
+                bar.innerHTML += `<button onclick="filterCat('${c}')" class="text-xs px-4 py-2 rounded-xl cursor-pointer whitespace-nowrap ${active ? 'bg-pink-600 font-bold text-white shadow-md' : 'glam-card text-gray-300'}">${c}</button>`;
+            });
+        }
+
+        function filterCat(c) { currentCategory = c; renderCategories(); renderProducts(); }
+
+        function renderProducts() {
+            let grid = document.getElementById('products-grid');
+            grid.innerHTML = "";
+            let filtered = products.filter(p => currentCategory === "الكل" || p.category === currentCategory);
+            
+            filtered.forEach((p, idx) => {
+                grid.innerHTML += `
+                    <div class="glam-card p-3 rounded-3xl flex flex-col justify-between space-y-2 shadow">
+                        <img src="${p.image}" class="w-full h-28 object-cover rounded-2xl border border-purple-950">
+                        <div>
+                            <span class="text-[9px] bg-pink-950 text-pink-400 px-2 py-0.5 rounded font-bold">${p.category}</span>
+                            <h4 class="font-bold text-white text-xs mt-1 line-clamp-1">${p.name}</h4>
+                            <span class="text-pink-400 font-black text-xs">${p.price} ج.م</span>
+                        </div>
+                        <button onclick="addToCart(${p.id})" class="w-full bg-pink-600 hover:bg-pink-500 text-white py-2 rounded-xl text-xs font-bold cursor-pointer">إضافة للسلة 🛍️</button>
+                    </div>
+                `;
+            });
+        }
+
+        function addToCart(id) {
+            let p = products.find(item => item.id === id);
+            let item = cart.find(i => i.id === id);
+            if(item) { item.qty++; } else { cart.push({ ...p, qty: 1 }); }
+            renderCart();
+        }
+
+        function renderCart() {
+            let container = document.getElementById('cart-items');
+            let countEl = document.getElementById('cart-count');
+            let totalBadge = document.getElementById('cart-total-badge');
+            let totalEl = document.getElementById('cart-total');
+
+            let totalQty = cart.reduce((s, i) => s + i.qty, 0);
+            countEl.innerText = totalQty;
+
+            if(cart.length === 0) {
+                container.innerHTML = `<p class="text-center text-gray-500 py-3">السلة فارغة..</p>`;
+                totalBadge.innerText = "0 ج.م";
+                totalEl.innerText = "0 ج.م";
+                return;
+            }
+
+            container.innerHTML = "";
+            let total = 0;
+            cart.forEach((i, idx) => {
+                let sub = i.price * i.qty;
+                total += sub;
+                container.innerHTML += `
+                    <div class="flex justify-between items-center bg-gray-900 p-2.5 rounded-xl border border-gray-800">
+                        <div><p class="font-bold text-white">${i.name}</p><p class="text-[10px] text-gray-400">العدد: ${i.qty}</p></div>
+                        <div class="flex items-center gap-2"><span class="text-pink-400 font-bold">${sub} ج.م</span><button onclick="cart.splice(${idx},1);renderCart();" class="text-red-400 cursor-pointer">✕</button></div>
+                    </div>
+                `;
+            });
+            totalBadge.innerText = total + " ج.م";
+            totalEl.innerText = total + " ج.م";
+        }
+
+        // إرسال الأوردر سحابياً عبر فايربيس للمحل
+        async function sendOrderCloud() {
+            let name = document.getElementById('cust-name').value.trim();
+            let phone = document.getElementById('cust-phone').value.trim();
+            let address = document.getElementById('cust-address').value.trim();
+
+            if(!name || !phone || !address) { alert("من فضلك أدخل الاسم ورقم الهاتف وعنوان التوصيل!"); return; }
+            if(cart.length === 0) { alert("سلة المشتريات فارغة!"); return; }
+
+            let orderId = "#GLM-" + Math.floor(1000 + Math.random() * 9000);
+            let total = cart.reduce((s, i) => s + (i.price * i.qty), 0);
+
+            try {
+                // حفظ الأوردر سحابياً في قاعدة البيانات
+                await db.collection("cosmetic_orders").add({
+                    orderId: orderId,
+                    name: name,
+                    phone: phone,
+                    address: address,
+                    items: cart,
+                    total: total,
+                    status: 'جديد بانتظار التوصيل 📦',
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                let text = `🛍️ أوردر مستحضرات وعطور جديد:\n📌 رقم الأوردر: ${orderId}\n👤 العميلة: ${name}\n📞 الهاتف: ${phone}\n📍 العنوان: ${address}\n\nالمنتجات:\n`;
+                cart.forEach(i => { text += `- ${i.name} (عدد: ${i.qty}) | ${i.price * i.qty} ج.م\n`; });
+                text += `\n💰 الإجمالي الكلي: ${total} ج.م`;
+
+                window.open(`https://wa.me/${adminWhatsApp}?text=${encodeURIComponent(text)}`, '_blank');
+                alert("تم إرسال أوردرك سحابياً وبنجاح للمحل! 🌸✨");
+                cart = [];
+                renderCart();
+            } catch (error) {
+                alert("حدث خطأ في الإرسال للسحابة: " + error.message);
+            }
+        }
+
+        // لوحة متابعة الأوردرات سحابياً باللحظة للمحل
+        function loadCloudOrdersRealtime() {
+            let list = document.getElementById('cloud-orders-list');
+            db.collection("cosmetic_orders").orderBy("createdAt", "desc").onSnapshot(snapshot => {
+                if(snapshot.empty) {
+                    list.innerHTML = `<p class="text-xs text-gray-500 text-center py-3">لا توجد أوردرات سحابية حالياً..</p>`;
+                    return;
+                }
+                list.innerHTML = "";
+                snapshot.forEach(doc => {
+                    let o = doc.data();
+                    let itemsStr = o.items.map(i => `• ${i.name} (عدد ${i.qty})`).join('<br>');
+                    list.innerHTML += `
+                        <div class="glam-card p-3 rounded-xl text-xs space-y-1.5 border border-pink-500/30">
+                            <div class="flex justify-between font-bold text-pink-400"><span>${o.orderId} - ${o.name}</span><span>${o.total} ج.م</span></div>
+                            <p class="text-gray-300">📞 ${o.phone} | 📍 ${o.address}</p>
+                            <div class="bg-gray-900 p-2 rounded text-gray-300">${itemsStr}</div>
+                            <p class="text-emerald-400 font-bold">${o.status}</p>
+                        </div>
+                    `;
+                });
+            });
+        }
+
+        async function addNewProductCloud() {
+            let name = document.getElementById('p-name').value.trim();
+            let cat = document.getElementById('p-cat').value.trim();
+            let price = parseFloat(document.getElementById('p-price').value);
+            let img = document.getElementById('p-img').value.trim() || "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=500";
+
+            if(!name || isNaN(price)) { alert("أدخل اسم المنتج والسعر صحيح!"); return; }
+
+            products.push({ id: Date.now(), name, category: cat, price, image: img });
+            renderCategories();
+            renderProducts();
+            alert("تم إضافة المنتج للمتجر بنجاح! ✨");
+        }
+
+        function saveAdminSettings() {
+            adminWhatsApp = document.getElementById('admin-whatsapp').value.trim();
+            localStorage.setItem('glam_whatsapp', adminWhatsApp);
+            alert("تم حفظ رقم الواتساب بنجاح! 💾");
+        }
+
+        renderCategories();
+        renderProducts();
+        renderCart();
+    </script>
+</body>
+</html>
