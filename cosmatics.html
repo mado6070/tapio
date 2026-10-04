@@ -24,17 +24,17 @@
 </head>
 <body class="min-h-screen pb-36 selection:bg-pink-600 selection:text-white">
 
-    <!-- شريط إعلاني فخم -->
-    <div class="bg-gradient-to-r from-pink-600 via-rose-500 to-purple-700 text-white text-[11px] font-bold py-2 px-4 text-center tracking-wider shadow-lg">
+    <!-- شريط إعلاني فخم (يتحدث سحابياً) -->
+    <div id="promo-banner-bar" class="bg-gradient-to-r from-pink-600 via-rose-500 to-purple-700 text-white text-[11px] font-bold py-2 px-4 text-center tracking-wider shadow-lg">
         ✨ Vanilla Store • أناقتك تبدأ من هنا مع أرقى العطور ومستحضرات التجميل الأصلية 🌸
     </div>
 
-    <!-- الهيدر -->
+    <!-- الهيدر الشيك -->
     <header class="vanilla-card border-b border-purple-950 p-4 sticky top-0 z-40">
         <div class="max-w-md mx-auto flex justify-between items-center">
-            <!-- اللوجو (اضغط عليه 5 مرات لفتح الإدارة) -->
+            <!-- اللوجو (صورة أو أيقونة + اسم المحل - اضغط 5 مرات لفتح الإدارة) -->
             <div onclick="handleLogoClick()" class="flex items-center gap-3 cursor-pointer select-none" title="Vanilla Store">
-                <div class="w-12 h-12 bg-gradient-to-tr from-pink-500 to-rose-600 rounded-2xl flex items-center justify-center font-black text-xl vanilla-glow text-white shadow-lg shadow-pink-600/30">
+                <div id="header-logo-container" class="w-12 h-12 bg-gradient-to-tr from-pink-500 to-rose-600 rounded-2xl flex items-center justify-center font-black text-xl vanilla-glow text-white shadow-lg shadow-pink-600/30 overflow-hidden">
                     🍦
                 </div>
                 <div class="text-right">
@@ -42,7 +42,9 @@
                     <p class="text-[10px] text-pink-400 font-semibold">Cosmetics & Perfumes</p>
                 </div>
             </div>
-            <span class="bg-pink-500/20 border border-pink-500/40 text-pink-400 text-xs px-3.5 py-2 rounded-xl font-bold">عطور ومكياج أصلي ✨</span>
+            <div class="flex items-center gap-1.5">
+                <span class="bg-pink-500/20 border border-pink-500/40 text-pink-400 text-[10px] px-2.5 py-1.5 rounded-xl font-bold">أصلي 100% ✨</span>
+            </div>
         </div>
     </header>
 
@@ -55,11 +57,12 @@
     <!-- المحتوى الرئيسي -->
     <main class="max-w-md mx-auto p-4 space-y-5">
         
-        <!-- بانر ترحيبي -->
-        <div class="vanilla-card p-5 rounded-3xl vanilla-glow text-center space-y-2 vanilla-border">
-            <span class="bg-pink-600/20 text-pink-300 text-[10px] font-extrabold px-3 py-1 rounded-full border border-pink-500/30 uppercase tracking-wider">منتجات أصلية 100%</span>
-            <h2 class="font-black text-lg text-white">دللي نفسك بأرقى عطور فانيلا والمكياج</h2>
-            <p class="text-xs text-gray-300">تواصل معنا واطلبي كل ما تحتاجينه بلمسة واحدة.</p>
+        <!-- بانر ترحيبي فخم في الهيدر -->
+        <div class="vanilla-card p-5 rounded-3xl vanilla-glow text-center space-y-2 vanilla-border relative overflow-hidden">
+            <div class="absolute -right-6 -top-6 w-24 h-24 bg-pink-500/10 rounded-full blur-xl"></div>
+            <span class="bg-pink-600/20 text-pink-300 text-[10px] font-extrabold px-3 py-1 rounded-full border border-pink-500/30 uppercase tracking-wider">عروض وتخفيضات حصرية</span>
+            <h2 class="font-black text-lg text-white">تألقي بأرقى العطور ومستحضرات التجميل</h2>
+            <p id="store-welcome-text" class="text-xs text-gray-300">تسوقي من تشكيلة فانيلا الفاخرة بكل سهولة وأمان.</p>
         </div>
 
         <!-- أقسام المتجر -->
@@ -156,7 +159,21 @@
                 <button onclick="closeAdminDashboard()" class="bg-gray-900 px-3.5 py-2 rounded-xl text-xs text-white cursor-pointer font-bold border border-gray-800">إغلاق ✕</button>
             </div>
 
-            <!-- إعدادات المتجر والدفع المنفصلة -->
+            <!-- التحكم في شاشة العروض والبانر الإعلاني وصورة اللوجو -->
+            <div class="vanilla-card p-4 rounded-2xl space-y-3">
+                <h4 class="font-bold text-pink-400 text-xs">🎨 إعدادات المظهر واللوجو والعروض:</h4>
+                <div>
+                    <label class="block text-gray-400 text-[11px] mb-1">نص الشريط الإعلاني فوق (Promo Banner):</label>
+                    <input type="text" id="admin-banner-text" placeholder="اكتب نص العرض أو التنبيه..." class="w-full bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white">
+                </div>
+                <div>
+                    <label class="block text-gray-400 text-[11px] mb-1">رفع صورة اللوجو الجديدة للمتجر:</label>
+                    <input type="file" id="logo-img-file" accept="image/*" class="w-full text-xs text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-pink-600 file:text-white hover:file:bg-pink-500 cursor-pointer">
+                </div>
+                <button onclick="saveThemeAndBannerSettings()" class="w-full bg-pink-600 text-white text-xs py-2.5 rounded-xl font-bold cursor-pointer">حفظ مظهر المتجر والعروض 💾</button>
+            </div>
+
+            <!-- إعدادات المتجر والدفع مع اسم صاحب المحفظة -->
             <div class="vanilla-card p-4 rounded-2xl space-y-3">
                 <h4 class="font-bold text-white text-xs">⚙️ إعدادات المتجر والدفع:</h4>
                 <div>
@@ -167,14 +184,18 @@
                     <label class="block text-gray-400 text-[11px] mb-1">حساب انستاباي (InstaPay Username):</label>
                     <input type="text" id="instapay-link" placeholder="store@instapay..." class="w-full bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white">
                 </div>
-                <div class="grid grid-cols-2 gap-2">
+                <div class="grid grid-cols-3 gap-1.5">
                     <div>
-                        <label class="block text-gray-400 text-[11px] mb-1">اسم المحفظة (فودافون كاش..):</label>
-                        <input type="text" id="wallet-name" placeholder="فودافون كاش" class="w-full bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white">
+                        <label class="block text-gray-400 text-[10px] mb-1">اسم المحفظة:</label>
+                        <input type="text" id="wallet-name" placeholder="فودافون كاش" class="w-full bg-gray-900 border border-gray-800 rounded-xl px-2.5 py-2 text-xs text-white">
                     </div>
                     <div>
-                        <label class="block text-gray-400 text-[11px] mb-1">رقم المحفظة:</label>
-                        <input type="text" id="wallet-number" placeholder="01000000000" class="w-full bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white">
+                        <label class="block text-gray-400 text-[10px] mb-1">رقم المحفظة:</label>
+                        <input type="text" id="wallet-number" placeholder="010..." class="w-full bg-gray-900 border border-gray-800 rounded-xl px-2.5 py-2 text-xs text-white">
+                    </div>
+                    <div>
+                        <label class="block text-gray-400 text-[10px] mb-1">اسم صاحبها:</label>
+                        <input type="text" id="wallet-owner" placeholder="محمد أحمد" class="w-full bg-gray-900 border border-gray-800 rounded-xl px-2.5 py-2 text-xs text-white">
                     </div>
                 </div>
                 <button onclick="saveStoreSettings()" class="w-full bg-pink-600 text-white text-xs py-2.5 rounded-xl font-bold cursor-pointer">حفظ إعدادات الدفع 💾</button>
@@ -205,7 +226,7 @@
                 </div>
                 <div>
                     <label class="block text-gray-400 text-[11px] mb-1">📍 لوكيشن المحل (Google Maps):</label>
-                    <input type="text" id="store-location" placeholder="رابط خرائط جوجل (Google Maps URL)..." class="w-full bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white">
+                    <input type="text" id="store-location" placeholder="رابط خرائط جوجل..." class="w-full bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white">
                 </div>
                 <button onclick="saveSocialSettings()" class="w-full bg-pink-600 text-white text-xs py-2.5 rounded-xl font-bold cursor-pointer">حفظ السوشيال واللوكيشن 📱</button>
             </div>
@@ -268,6 +289,9 @@
         let instapay = localStorage.getItem('vanilla_instapay') || "store@instapay";
         let walletName = localStorage.getItem('vanilla_wallet_name') || "فودافون كاش";
         let walletNumber = localStorage.getItem('vanilla_wallet_num') || "01000000000";
+        let walletOwner = localStorage.getItem('vanilla_wallet_owner') || "محمد أحمد";
+        let promoText = localStorage.getItem('vanilla_promo') || "✨ Vanilla Store • أناقتك تبدأ من هنا مع أرقى العطور ومستحضرات التجميل الأصلية 🌸";
+        let storeLogo = localStorage.getItem('vanilla_logo') || "";
         
         let socialLinks = JSON.parse(localStorage.getItem('vanilla_socials')) || {
             fb: "https://facebook.com",
@@ -289,6 +313,17 @@
             { id: 2, name: "مجموعة روج سائل فانيلا مات", price: 250, category: "مكياج 💄", image: "https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=500", available: true }
         ];
 
+        // تطبيق اللوجو والنص الإعلاني عند التحميل
+        function applyThemeSettings() {
+            document.getElementById('promo-banner-bar').innerText = promoText;
+            let logoContainer = document.getElementById('header-logo-container');
+            if(storeLogo) {
+                logoContainer.innerHTML = `<img src="${storeLogo}" class="w-full h-full object-cover">`;
+            } else {
+                logoContainer.innerHTML = `🍦`;
+            }
+        }
+
         let logoClicks = 0;
         function handleLogoClick() {
             logoClicks++;
@@ -308,6 +343,8 @@
                 document.getElementById('instapay-link').value = instapay;
                 document.getElementById('wallet-name').value = walletName;
                 document.getElementById('wallet-number').value = walletNumber;
+                document.getElementById('wallet-owner').value = walletOwner;
+                document.getElementById('admin-banner-text').value = promoText;
                 document.getElementById('social-fb').value = socialLinks.fb;
                 document.getElementById('social-ig').value = socialLinks.ig;
                 document.getElementById('social-tt').value = socialLinks.tt;
@@ -327,7 +364,7 @@
                 <a href="${socialLinks.fb}" target="_blank" class="bg-gray-900 border border-gray-800 text-pink-300 text-xs p-3 rounded-xl font-bold flex items-center justify-center gap-1.5 hover:bg-gray-800">📘 فيسبوك</a>
                 <a href="${socialLinks.ig}" target="_blank" class="bg-gray-900 border border-gray-800 text-pink-300 text-xs p-3 rounded-xl font-bold flex items-center justify-center gap-1.5 hover:bg-gray-800">📸 انستجرام</a>
                 <a href="${socialLinks.tt}" target="_blank" class="bg-gray-900 border border-gray-800 text-pink-300 text-xs p-3 rounded-xl font-bold flex items-center justify-center gap-1.5 hover:bg-gray-800">🎵 تيك توك</a>
-                <a href="${socialLinks.tg}" target="_blank" class="bg-gray-900 border border-gray-800 text-pink-300 text-xs p-3 rounded-xl font-bold flex items-center justify-center gap-1.5 hover:bg-gray-800">✈️️ تليجرام</a>
+                <a href="${socialLinks.tg}" target="_blank" class="bg-gray-900 border border-gray-800 text-pink-300 text-xs p-3 rounded-xl font-bold flex items-center justify-center gap-1.5 hover:bg-gray-800">✈ تليجرام</a>
                 <a href="${socialLinks.wa}" target="_blank" class="bg-gray-900 border border-gray-800 text-emerald-400 text-xs p-3 rounded-xl font-bold flex items-center justify-center gap-1.5 hover:bg-gray-800">💬 واتساب</a>
                 <a href="${socialLinks.location}" target="_blank" class="bg-gray-900 border border-gray-800 text-cyan-400 text-xs p-3 rounded-xl font-bold flex items-center justify-center gap-1.5 hover:bg-gray-800">📍 لوكيشن المحل</a>
             `;
@@ -353,7 +390,7 @@
                 codBtn.className = "p-3 rounded-2xl text-xs font-bold border border-gray-800 bg-gray-900 text-gray-300 cursor-pointer";
                 box.classList.remove('hidden');
                 
-                inst.innerHTML = `💳 تفاصيل الدفع الإلكتروني:<br>• انستاباي: <b>${instapay}</b><br>• ${walletName}: <b>${walletNumber}</b><br>الإجمالي المطلوب: <b>${cartTotal} ج.م</b>`;
+                inst.innerHTML = `💳 تفاصيل الدفع الإلكتروني:<br>• انستاباي: <b>${instapay}</b><br>• ${walletName}: <b>${walletNumber}</b> (باسم: <b>${walletOwner}</b>)<br>الإجمالي المطلوب: <b>${cartTotal} ج.م</b>`;
                 
                 instapayBtn.href = `instapay://transfer?pa=${instapay}&am=${cartTotal}&cu=EGP`;
                 instapayBtn.classList.remove('hidden');
@@ -415,11 +452,10 @@
         function renderProducts() {
             let grid = document.getElementById('products-grid');
             grid.innerHTML = "";
-            // نعرض فقط المنتجات المتاحة للعملاء
             let filtered = products.filter(p => p.available !== false && (currentCategory === "الكل" || p.category === currentCategory));
             
             if(filtered.length === 0) {
-                grid.innerHTML = `<col span="2"><p class="text-xs text-gray-500 text-center py-6 col-span-2">لا توجد منتجات متاحة في هذا القسم حالياً..</p>`;
+                grid.innerHTML = `<p class="text-xs text-gray-500 text-center py-6 col-span-2">لا توجد منتجات متاحة في هذا القسم حالياً..</p>`;
                 return;
             }
 
@@ -438,7 +474,6 @@
             });
         }
 
-        // عرض كل الأصناف في لوحة التحكم مع زرار تحديد متاح أو خلصان
         function renderAdminProductsList() {
             let list = document.getElementById('admin-products-list');
             if(!list) return;
@@ -472,18 +507,12 @@
         async function toggleProductStatus(id, newStatus) {
             try {
                 await db.collection("vanilla_products").doc(id).update({ available: newStatus });
-            } catch(err) {
-                alert("خطأ: " + err.message);
-            }
+            } catch(err) { alert("خطأ: " + err.message); }
         }
 
         async function deleteProduct(id) {
             if(confirm("هل أنت متأكد من حذف هذا المنتج نهائياً؟")) {
-                try {
-                    await db.collection("vanilla_products").doc(id).delete();
-                } catch(err) {
-                    alert("خطأ أثناء الحذف: " + err.message);
-                }
+                try { await db.collection("vanilla_products").doc(id).delete(); } catch(err) { alert("خطأ: " + err.message); }
             }
         }
 
@@ -567,9 +596,7 @@
                 cart = [];
                 transferScreenBase64 = "";
                 renderCart();
-            } catch (error) {
-                alert("حدث خطأ أثناء الإرسال: " + error.message);
-            }
+            } catch (error) { alert("خطأ: " + error.message); }
         }
 
         function loadCloudOrdersRealtime() {
@@ -627,16 +654,39 @@
             }
         }
 
+        function saveThemeAndBannerSettings() {
+            promoText = document.getElementById('admin-banner-text').value.trim();
+            let logoFile = document.getElementById('logo-img-file').files[0];
+
+            let saveLogoAndApply = (logoUrl) => {
+                if(logoUrl) storeLogo = logoUrl;
+                localStorage.setItem('vanilla_promo', promoText);
+                localStorage.setItem('vanilla_logo', storeLogo);
+                applyThemeSettings();
+                alert("تم حفظ المظهر والشريط الإعلاني واللوجو بنجاح! 🎨");
+            };
+
+            if(logoFile) {
+                let reader = new FileReader();
+                reader.onload = function(e) { saveLogoAndApply(e.target.result); };
+                reader.readAsDataURL(logoFile);
+            } else {
+                saveLogoAndApply();
+            }
+        }
+
         function saveStoreSettings() {
             adminWhatsApp = document.getElementById('admin-whatsapp').value.trim();
             instapay = document.getElementById('instapay-link').value.trim();
             walletName = document.getElementById('wallet-name').value.trim();
             walletNumber = document.getElementById('wallet-number').value.trim();
+            walletOwner = document.getElementById('wallet-owner').value.trim();
 
             localStorage.setItem('vanilla_whatsapp', adminWhatsApp);
             localStorage.setItem('vanilla_instapay', instapay);
             localStorage.setItem('vanilla_wallet_name', walletName);
             localStorage.setItem('vanilla_wallet_num', walletNumber);
+            localStorage.setItem('vanilla_wallet_owner', walletOwner);
             alert("تم حفظ إعدادات الدفع بنجاح! 💾");
         }
 
@@ -653,6 +703,7 @@
             alert("تم حفظ روابط السوشيال ميديا واللوكيشن بنجاح! 📱");
         }
 
+        applyThemeSettings();
         renderFooterSocials();
         loadProductsRealtime();
         renderCart();
