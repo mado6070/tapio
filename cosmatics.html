@@ -22,7 +22,7 @@
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
-<body class="min-h-screen pb-32 selection:bg-pink-600 selection:text-white">
+<body class="min-h-screen pb-36 selection:bg-pink-600 selection:text-white">
 
     <!-- شريط إعلاني فخم -->
     <div class="bg-gradient-to-r from-pink-600 via-rose-500 to-purple-700 text-white text-[11px] font-bold py-2 px-4 text-center tracking-wider shadow-lg">
@@ -42,9 +42,7 @@
                     <p class="text-[10px] text-pink-400 font-semibold">Cosmetics & Perfumes</p>
                 </div>
             </div>
-            
-            <!-- أزرار السوشيال ميديا في الهيدر -->
-            <div id="header-socials" class="flex items-center gap-1.5"></div>
+            <span class="bg-pink-500/20 border border-pink-500/40 text-pink-400 text-xs px-3.5 py-2 rounded-xl font-bold">عطور ومكياج أصلي ✨</span>
         </div>
     </header>
 
@@ -92,11 +90,16 @@
                 </div>
             </div>
 
-            <!-- تفاصيل الدفع الإلكتروني والتحويل المباشر لتطبيق انستاباي -->
+            <!-- تفاصيل الدفع الإلكتروني -->
             <div id="online-payment-box" class="hidden bg-gray-900/90 p-4 rounded-2xl border border-pink-500/30 space-y-3 text-xs">
-                <p id="payment-instructions" class="text-gray-300 font-semibold"></p>
+                <p id="payment-instructions" class="text-gray-300 font-semibold leading-relaxed"></p>
                 
-                <!-- زرار الدفع المباشر عبر انستاباي -->
+                <!-- زرار نسخ رقم المحفظة -->
+                <button type="button" id="copy-wallet-btn" onclick="copyWalletNumber()" class="w-full bg-gray-800 hover:bg-gray-700 text-pink-400 py-2.5 rounded-xl font-bold border border-pink-500/30 transition hidden">
+                    📋 نسخ رقم المحفظة
+                </button>
+
+                <!-- زرار فتح انستاباي مباشر -->
                 <a id="instapay-direct-btn" href="#" target="_blank" class="w-full bg-purple-700 hover:bg-purple-600 text-white py-3 rounded-xl font-black text-center flex items-center justify-center gap-2 shadow-lg transition hidden">
                     🚀 فتح تطبيق انستاباي للتحويل فوراً
                 </a>
@@ -114,6 +117,12 @@
                 ☁️ إرسال الأوردر للمحل سحابياً وعبر الواتساب 🚀
             </button>
         </div>
+
+        <!-- فوتر الصفحة (أزرار السوشيال ميديا ولوكيشن المحل) -->
+        <footer class="vanilla-card p-5 rounded-3xl vanilla-border space-y-3 text-center mt-10">
+            <h4 class="font-bold text-xs text-pink-400 uppercase tracking-wider">📍 تواصل معنا وعنوان المحل</h4>
+            <div id="footer-socials" class="grid grid-cols-2 gap-2.5 pt-1"></div>
+        </footer>
 
     </main>
 
@@ -147,29 +156,63 @@
                 <button onclick="closeAdminDashboard()" class="bg-gray-900 px-3.5 py-2 rounded-xl text-xs text-white cursor-pointer font-bold border border-gray-800">إغلاق ✕</button>
             </div>
 
-            <!-- إعدادات المتجر والدفع -->
+            <!-- إعدادات المتجر والدفع المنفصلة -->
             <div class="vanilla-card p-4 rounded-2xl space-y-3">
                 <h4 class="font-bold text-white text-xs">⚙️ إعدادات المتجر والدفع:</h4>
-                <input type="text" id="admin-whatsapp" placeholder="رقم واتساب الأوردرات (مثال: 201000000000)..." class="w-full bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white">
-                <input type="text" id="instapay-link" placeholder="حساب انستاباي (مثال: store@instapay)..." class="w-full bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white">
-                <input type="text" id="wallet-number" placeholder="رقم محفظة فودافون كاش..." class="w-full bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white">
-                <button onclick="saveStoreSettings()" class="w-full bg-pink-600 text-white text-xs py-2.5 rounded-xl font-bold cursor-pointer">حفظ الإعدادات 💾</button>
+                <div>
+                    <label class="block text-gray-400 text-[11px] mb-1">رقم واتساب الأوردرات:</label>
+                    <input type="text" id="admin-whatsapp" placeholder="201000000000..." class="w-full bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white">
+                </div>
+                <div>
+                    <label class="block text-gray-400 text-[11px] mb-1">حساب انستاباي (InstaPay Username):</label>
+                    <input type="text" id="instapay-link" placeholder="store@instapay..." class="w-full bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white">
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block text-gray-400 text-[11px] mb-1">اسم المحفظة (فودافون كاش..):</label>
+                        <input type="text" id="wallet-name" placeholder="فودافون كاش" class="w-full bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white">
+                    </div>
+                    <div>
+                        <label class="block text-gray-400 text-[11px] mb-1">رقم المحفظة:</label>
+                        <input type="text" id="wallet-number" placeholder="01000000000" class="w-full bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white">
+                    </div>
+                </div>
+                <button onclick="saveStoreSettings()" class="w-full bg-pink-600 text-white text-xs py-2.5 rounded-xl font-bold cursor-pointer">حفظ إعدادات الدفع 💾</button>
             </div>
 
-            <!-- روابط السوشيال ميديا الكاملة -->
+            <!-- مربعات روابط السوشيال ميديا واللوكيشن -->
             <div class="vanilla-card p-4 rounded-2xl space-y-3">
-                <h4 class="font-bold text-pink-400 text-xs">🌐 روابط السوشيال ميديا:</h4>
-                <input type="text" id="social-fb" placeholder="رابط صفحة الفيسبوك..." class="w-full bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white">
-                <input type="text" id="social-ig" placeholder="رابط انستجرام..." class="w-full bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white">
-                <input type="text" id="social-tt" placeholder="رابط تيك توك..." class="w-full bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white">
-                <input type="text" id="social-tg" placeholder="رابط قناة تليجرام..." class="w-full bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white">
-                <input type="text" id="social-wa" placeholder="رابط واتساب مباشر..." class="w-full bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white">
-                <button onclick="saveSocialSettings()" class="w-full bg-pink-600 text-white text-xs py-2.5 rounded-xl font-bold cursor-pointer">حفظ روابط السوشيال 📱</button>
+                <h4 class="font-bold text-pink-400 text-xs">🌐 مربعات السوشيال ميديا واللوكيشن:</h4>
+                <div>
+                    <label class="block text-gray-400 text-[11px] mb-1">📘 فيسبوك (Facebook):</label>
+                    <input type="text" id="social-fb" placeholder="رابط الفيسبوك..." class="w-full bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white">
+                </div>
+                <div>
+                    <label class="block text-gray-400 text-[11px] mb-1">📸 انستجرام (Instagram):</label>
+                    <input type="text" id="social-ig" placeholder="رابط انستجرام..." class="w-full bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white">
+                </div>
+                <div>
+                    <label class="block text-gray-400 text-[11px] mb-1">🎵 تيك توك (TikTok):</label>
+                    <input type="text" id="social-tt" placeholder="رابط تيك توك..." class="w-full bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white">
+                </div>
+                <div>
+                    <label class="block text-gray-400 text-[11px] mb-1">✈️ تليجرام (Telegram):</label>
+                    <input type="text" id="social-tg" placeholder="رابط تليجرام..." class="w-full bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white">
+                </div>
+                <div>
+                    <label class="block text-gray-400 text-[11px] mb-1">💬 واتساب مباشر (WhatsApp):</label>
+                    <input type="text" id="social-wa" placeholder="رابط واتساب..." class="w-full bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white">
+                </div>
+                <div>
+                    <label class="block text-gray-400 text-[11px] mb-1">📍 لوكيشن المحل (Google Maps):</label>
+                    <input type="text" id="store-location" placeholder="رابط خرائط جوجل (Google Maps URL)..." class="w-full bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white">
+                </div>
+                <button onclick="saveSocialSettings()" class="w-full bg-pink-600 text-white text-xs py-2.5 rounded-xl font-bold cursor-pointer">حفظ السوشيال واللوكيشن 📱</button>
             </div>
 
             <!-- إضافة منتج جديد -->
             <div class="vanilla-card p-4 rounded-2xl space-y-3">
-                <h4 class="font-bold text-pink-400 text-xs">➕ إضافة منتج جديد:</h4>
+                <h4 class="font-bold text-pink-400 text-xs">➕ إضافة منتج جديد للمتجر:</h4>
                 <input type="text" id="p-name" placeholder="اسم المنتج..." class="w-full bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white">
                 <input type="text" id="p-cat" value="عطور فخمة 🌸" class="w-full bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white">
                 <input type="number" id="p-price" placeholder="السعر (ج.م)..." class="w-full bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white">
@@ -180,9 +223,9 @@
                 <button onclick="addNewProductCloud()" class="w-full bg-pink-600 text-white text-xs py-2.5 rounded-xl font-bold cursor-pointer">نشر المنتج سحابياً 🚀</button>
             </div>
 
-            <!-- إدارة ومتابعة منتجات المحل (حذف المنتجات الخلاصانة) -->
+            <!-- إدارة كل الأصناف وتحديد إذا كان الصنف متاح أو خلصان -->
             <div class="space-y-2 pt-2">
-                <h4 class="font-bold text-gray-300 text-xs">📦 إدارة المنتجات الحالية (حذف المنتجات الخلاصانة):</h4>
+                <h4 class="font-bold text-gray-300 text-xs">📦 إدارة جميع أصناف المتجر (متاح / خلصان):</h4>
                 <div id="admin-products-list" class="space-y-2"></div>
             </div>
 
@@ -222,14 +265,17 @@
         const db = firebase.firestore();
 
         let adminWhatsApp = localStorage.getItem('vanilla_whatsapp') || "201000000000";
-        let instapay = localStorage.getItem('vanilla_instapay') || "vanillastore@instapay";
-        let wallet = localStorage.getItem('vanilla_wallet') || "01000000000";
+        let instapay = localStorage.getItem('vanilla_instapay') || "store@instapay";
+        let walletName = localStorage.getItem('vanilla_wallet_name') || "فودافون كاش";
+        let walletNumber = localStorage.getItem('vanilla_wallet_num') || "01000000000";
+        
         let socialLinks = JSON.parse(localStorage.getItem('vanilla_socials')) || {
             fb: "https://facebook.com",
             ig: "https://instagram.com",
             tt: "https://tiktok.com",
             tg: "https://t.me",
-            wa: "https://wa.me/" + adminWhatsApp
+            wa: "https://wa.me/" + adminWhatsApp,
+            location: "https://maps.google.com"
         };
 
         let paymentMethod = "COD";
@@ -239,8 +285,8 @@
         let products = [];
 
         let defaultProducts = [
-            { id: 1, name: "عطر فانيلا ملكي فاخر", price: 650, category: "عطور فخمة 🌸", image: "https://images.unsplash.com/photo-1523293182086-7651a899d37f?w=500" },
-            { id: 2, name: "مجموعة روج سائل فانيلا مات", price: 250, category: "مكياج 💄", image: "https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=500" }
+            { id: 1, name: "عطر فانيلا ملكي فاخر", price: 650, category: "عطور فخمة 🌸", image: "https://images.unsplash.com/photo-1523293182086-7651a899d37f?w=500", available: true },
+            { id: 2, name: "مجموعة روج سائل فانيلا مات", price: 250, category: "مكياج 💄", image: "https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=500", available: true }
         ];
 
         let logoClicks = 0;
@@ -260,12 +306,14 @@
                 document.getElementById('admin-dashboard').classList.remove('hidden');
                 document.getElementById('admin-whatsapp').value = adminWhatsApp;
                 document.getElementById('instapay-link').value = instapay;
-                document.getElementById('wallet-number').value = wallet;
+                document.getElementById('wallet-name').value = walletName;
+                document.getElementById('wallet-number').value = walletNumber;
                 document.getElementById('social-fb').value = socialLinks.fb;
                 document.getElementById('social-ig').value = socialLinks.ig;
                 document.getElementById('social-tt').value = socialLinks.tt;
                 document.getElementById('social-tg').value = socialLinks.tg;
                 document.getElementById('social-wa').value = socialLinks.wa;
+                document.getElementById('store-location').value = socialLinks.location;
                 loadCloudOrdersRealtime();
                 renderAdminProductsList();
             } else { alert("الرقم السري خاطئ!"); }
@@ -273,13 +321,15 @@
 
         function closeAdminDashboard() { document.getElementById('admin-dashboard').classList.add('hidden'); }
 
-        function renderHeaderSocials() {
-            let container = document.getElementById('header-socials');
+        function renderFooterSocials() {
+            let container = document.getElementById('footer-socials');
             container.innerHTML = `
-                <a href="${socialLinks.wa}" target="_blank" class="bg-gray-900 border border-gray-800 text-emerald-400 text-xs px-2.5 py-1.5 rounded-xl font-bold flex items-center gap-1 hover:bg-gray-800" title="واتساب">💬</a>
-                <a href="${socialLinks.ig}" target="_blank" class="bg-gray-900 border border-gray-800 text-pink-400 text-xs px-2.5 py-1.5 rounded-xl font-bold flex items-center gap-1 hover:bg-gray-800" title="انستجرام">📸</a>
-                <a href="${socialLinks.tt}" target="_blank" class="bg-gray-900 border border-gray-800 text-cyan-400 text-xs px-2.5 py-1.5 rounded-xl font-bold flex items-center gap-1 hover:bg-gray-800" title="تيك توك">🎵</a>
-                <a href="${socialLinks.tg}" target="_blank" class="bg-gray-900 border border-gray-800 text-sky-400 text-xs px-2.5 py-1.5 rounded-xl font-bold flex items-center gap-1 hover:bg-gray-800" title="تليجرام">✈️</a>
+                <a href="${socialLinks.fb}" target="_blank" class="bg-gray-900 border border-gray-800 text-pink-300 text-xs p-3 rounded-xl font-bold flex items-center justify-center gap-1.5 hover:bg-gray-800">📘 فيسبوك</a>
+                <a href="${socialLinks.ig}" target="_blank" class="bg-gray-900 border border-gray-800 text-pink-300 text-xs p-3 rounded-xl font-bold flex items-center justify-center gap-1.5 hover:bg-gray-800">📸 انستجرام</a>
+                <a href="${socialLinks.tt}" target="_blank" class="bg-gray-900 border border-gray-800 text-pink-300 text-xs p-3 rounded-xl font-bold flex items-center justify-center gap-1.5 hover:bg-gray-800">🎵 تيك توك</a>
+                <a href="${socialLinks.tg}" target="_blank" class="bg-gray-900 border border-gray-800 text-pink-300 text-xs p-3 rounded-xl font-bold flex items-center justify-center gap-1.5 hover:bg-gray-800">✈️️ تليجرام</a>
+                <a href="${socialLinks.wa}" target="_blank" class="bg-gray-900 border border-gray-800 text-emerald-400 text-xs p-3 rounded-xl font-bold flex items-center justify-center gap-1.5 hover:bg-gray-800">💬 واتساب</a>
+                <a href="${socialLinks.location}" target="_blank" class="bg-gray-900 border border-gray-800 text-cyan-400 text-xs p-3 rounded-xl font-bold flex items-center justify-center gap-1.5 hover:bg-gray-800">📍 لوكيشن المحل</a>
             `;
         }
 
@@ -290,6 +340,7 @@
             let box = document.getElementById('online-payment-box');
             let inst = document.getElementById('payment-instructions');
             let instapayBtn = document.getElementById('instapay-direct-btn');
+            let copyBtn = document.getElementById('copy-wallet-btn');
 
             let cartTotal = cart.reduce((s, i) => s + (i.price * i.qty), 0);
 
@@ -301,12 +352,18 @@
                 onlineBtn.className = "p-3 rounded-2xl text-xs font-bold border border-pink-500 bg-pink-600 text-white cursor-pointer";
                 codBtn.className = "p-3 rounded-2xl text-xs font-bold border border-gray-800 bg-gray-900 text-gray-300 cursor-pointer";
                 box.classList.remove('hidden');
-                inst.innerHTML = `💳 الدفع الإلكتروني:<br>• انستاباي: <b>${instapay}</b><br>• محفظة فودافون كاش: <b>${wallet}</b><br>الإجمالي المطلوب: <b>${cartTotal} ج.م</b>`;
                 
-                // تفعيل زرار الفتح المباشر لتطبيق انستاباي
+                inst.innerHTML = `💳 تفاصيل الدفع الإلكتروني:<br>• انستاباي: <b>${instapay}</b><br>• ${walletName}: <b>${walletNumber}</b><br>الإجمالي المطلوب: <b>${cartTotal} ج.م</b>`;
+                
                 instapayBtn.href = `instapay://transfer?pa=${instapay}&am=${cartTotal}&cu=EGP`;
                 instapayBtn.classList.remove('hidden');
+                copyBtn.classList.remove('hidden');
             }
+        }
+
+        function copyWalletNumber() {
+            navigator.clipboard.writeText(walletNumber);
+            alert("تم نسخ رقم المحفظة بنجاح: " + walletNumber);
         }
 
         document.getElementById('transfer-screen-file').addEventListener('change', function(e) {
@@ -345,7 +402,7 @@
         function renderCategories() {
             let bar = document.getElementById('categories-bar');
             let cats = ["الكل"];
-            products.forEach(p => { if(!cats.includes(p.category)) cats.push(p.category); });
+            products.forEach(p => { if(p.available !== false && !cats.includes(p.category)) cats.push(p.category); });
             bar.innerHTML = "";
             cats.forEach(c => {
                 let active = currentCategory === c;
@@ -358,8 +415,14 @@
         function renderProducts() {
             let grid = document.getElementById('products-grid');
             grid.innerHTML = "";
-            let filtered = products.filter(p => currentCategory === "الكل" || p.category === currentCategory);
+            // نعرض فقط المنتجات المتاحة للعملاء
+            let filtered = products.filter(p => p.available !== false && (currentCategory === "الكل" || p.category === currentCategory));
             
+            if(filtered.length === 0) {
+                grid.innerHTML = `<col span="2"><p class="text-xs text-gray-500 text-center py-6 col-span-2">لا توجد منتجات متاحة في هذا القسم حالياً..</p>`;
+                return;
+            }
+
             filtered.forEach((p) => {
                 grid.innerHTML += `
                     <div class="vanilla-card p-3 rounded-3xl flex flex-col justify-between space-y-2 shadow">
@@ -375,7 +438,7 @@
             });
         }
 
-        // عرض المنتجات داخل لوحة التحكم لمتابعتها وحذف المنتجات الخلاصانة
+        // عرض كل الأصناف في لوحة التحكم مع زرار تحديد متاح أو خلصان
         function renderAdminProductsList() {
             let list = document.getElementById('admin-products-list');
             if(!list) return;
@@ -385,6 +448,7 @@
             }
             list.innerHTML = "";
             products.forEach(p => {
+                let isAvail = p.available !== false;
                 list.innerHTML += `
                     <div class="flex justify-between items-center bg-gray-900 p-2.5 rounded-xl border border-gray-800 text-xs">
                         <div class="flex items-center gap-2">
@@ -394,17 +458,29 @@
                                 <span class="text-pink-400">${p.price} ج.م</span>
                             </div>
                         </div>
-                        <button onclick="deleteProduct('${p.id}')" class="bg-red-500/20 border border-red-500/40 text-red-400 px-3 py-1.5 rounded-lg font-bold cursor-pointer">حذف (خلصان ❌)</button>
+                        <div class="flex items-center gap-2">
+                            <button onclick="toggleProductStatus('${p.id}', ${!isAvail})" class="px-2.5 py-1.5 rounded-lg font-bold cursor-pointer ${isAvail ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40' : 'bg-red-500/20 text-red-400 border border-red-500/40'}">
+                                ${isAvail ? 'متاح ✅' : 'خلصان ❌'}
+                            </button>
+                            <button onclick="deleteProduct('${p.id}')" class="text-red-400 font-bold px-1.5 py-1 cursor-pointer" title="حذف نهائي">🗑️</button>
+                        </div>
                     </div>
                 `;
             });
         }
 
+        async function toggleProductStatus(id, newStatus) {
+            try {
+                await db.collection("vanilla_products").doc(id).update({ available: newStatus });
+            } catch(err) {
+                alert("خطأ: " + err.message);
+            }
+        }
+
         async function deleteProduct(id) {
-            if(confirm("هل أنت متأكد من حذف هذا المنتج وإزالته من المتجر؟")) {
+            if(confirm("هل أنت متأكد من حذف هذا المنتج نهائياً؟")) {
                 try {
                     await db.collection("vanilla_products").doc(id).delete();
-                    alert("تم حذف المنتج سحابياً بنجاح! 🗑️");
                 } catch(err) {
                     alert("خطأ أثناء الحذف: " + err.message);
                 }
@@ -472,7 +548,7 @@
                 address: address,
                 items: cart,
                 total: total,
-                payment: paymentMethod === 'COD' ? 'دفع عند الاستلام 💵' : 'تحويل إلكتروني (انستاباي/محفظة) 📱',
+                payment: paymentMethod === 'COD' ? 'دفع عند الاستلام 💵' : `تحويل إلكتروني (${walletName}) 📱`,
                 transferScreen: transferScreenBase64 || null,
                 status: 'جديد بانتظار المراجعة 📦',
                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -533,7 +609,7 @@
 
             let saveToDb = (imgUrl) => {
                 let newId = Date.now().toString();
-                let newProd = { id: newId, name, category: cat, price, image: imgUrl };
+                let newProd = { id: newId, name, category: cat, price, image: imgUrl, available: true };
                 db.collection("vanilla_products").doc(newId).set(newProd).then(() => {
                     alert("تم نشر المنتج سحابياً بنجاح! ✨");
                     document.getElementById('p-name').value = "";
@@ -554,11 +630,14 @@
         function saveStoreSettings() {
             adminWhatsApp = document.getElementById('admin-whatsapp').value.trim();
             instapay = document.getElementById('instapay-link').value.trim();
-            wallet = document.getElementById('wallet-number').value.trim();
+            walletName = document.getElementById('wallet-name').value.trim();
+            walletNumber = document.getElementById('wallet-number').value.trim();
+
             localStorage.setItem('vanilla_whatsapp', adminWhatsApp);
             localStorage.setItem('vanilla_instapay', instapay);
-            localStorage.setItem('vanilla_wallet', wallet);
-            alert("تم حفظ إعدادات المتجر بنجاح! 💾");
+            localStorage.setItem('vanilla_wallet_name', walletName);
+            localStorage.setItem('vanilla_wallet_num', walletNumber);
+            alert("تم حفظ إعدادات الدفع بنجاح! 💾");
         }
 
         function saveSocialSettings() {
@@ -567,12 +646,14 @@
             socialLinks.tt = document.getElementById('social-tt').value.trim();
             socialLinks.tg = document.getElementById('social-tg').value.trim();
             socialLinks.wa = document.getElementById('social-wa').value.trim();
+            socialLinks.location = document.getElementById('store-location').value.trim();
+
             localStorage.setItem('vanilla_socials', JSON.stringify(socialLinks));
-            renderHeaderSocials();
-            alert("تم حفظ روابط السوشيال ميديا! 📱");
+            renderFooterSocials();
+            alert("تم حفظ روابط السوشيال ميديا واللوكيشن بنجاح! 📱");
         }
 
-        renderHeaderSocials();
+        renderFooterSocials();
         loadProductsRealtime();
         renderCart();
     </script>
