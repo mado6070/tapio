@@ -50,7 +50,7 @@
 
     <!-- زرار السلة الجانبي العائم -->
     <button onclick="toggleCartModal()" class="fixed left-4 bottom-24 z-45 bg-white text-black p-4 rounded-full shadow-2xl flex items-center gap-2 cursor-pointer hover:bg-zinc-200 transition font-black">
-        <span class="text-xl">🛍️</span>
+        <span class="text-xl">🛍️️</span>
         <span id="floating-cart-count" class="bg-black text-white text-xs font-black px-2 py-0.5 rounded-full">0</span>
     </button>
 
@@ -162,6 +162,29 @@
                 <button onclick="closeAdminDashboard()" class="bg-zinc-900 px-3.5 py-2 rounded-xl text-xs text-white cursor-pointer font-bold border border-white/10">إغلاق ✕</button>
             </div>
 
+            <!-- قسم الإحصائيات الشاملة للموقع -->
+            <div class="vanilla-card p-4 rounded-2xl space-y-3">
+                <h4 class="font-bold text-white text-xs">📊 إحصائيات الموقع الشاملة (Analytics):</h4>
+                <div class="grid grid-cols-2 gap-2.5">
+                    <div class="bg-black/60 p-3 rounded-xl border border-white/10 text-center">
+                        <span class="text-[10px] text-zinc-400">إجمالي المبيعات</span>
+                        <h3 id="stat-total-sales" class="font-black text-white text-sm mt-1">0 ج.م</h3>
+                    </div>
+                    <div class="bg-black/60 p-3 rounded-xl border border-white/10 text-center">
+                        <span class="text-[10px] text-zinc-400">إجمالي الأوردرات</span>
+                        <h3 id="stat-total-orders" class="font-black text-white text-sm mt-1">0</h3>
+                    </div>
+                    <div class="bg-black/60 p-3 rounded-xl border border-white/10 text-center">
+                        <span class="text-[10px] text-emerald-400">تم التسليم 🟢</span>
+                        <h3 id="stat-delivered-orders" class="font-black text-white text-sm mt-1">0</h3>
+                    </div>
+                    <div class="bg-black/60 p-3 rounded-xl border border-white/10 text-center">
+                        <span class="text-[10px] text-amber-400">قيد التوصيل ⏳</span>
+                        <h3 id="stat-pending-orders" class="font-black text-white text-sm mt-1">0</h3>
+                    </div>
+                </div>
+            </div>
+
             <!-- التحكم في المظهر واللوجو والعروض -->
             <div class="vanilla-card p-4 rounded-2xl space-y-3">
                 <h4 class="font-bold text-white text-xs">🎨 إعدادات المظهر واللوجو والعروض:</h4>
@@ -170,7 +193,7 @@
                     <input type="text" id="admin-banner-text" placeholder="اكتب نص العرض أو التنبيه..." class="w-full bg-black/60 border border-white/10 rounded-xl px-3 py-2 text-xs text-white">
                 </div>
                 <div>
-                    <label class="block text-zinc-400 text-[11px] mb-1">رفع صورة اللوجو (مطابق للوجو الأصلي):</label>
+                    <label class="block text-zinc-400 text-[11px] mb-1">رفع صورة اللوجو الجديدة:</label>
                     <input type="file" id="logo-img-file" accept="image/*" class="w-full text-xs text-zinc-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-white file:text-black hover:file:bg-zinc-200 cursor-pointer">
                 </div>
                 <button onclick="saveThemeAndBannerSettings()" class="w-full bg-white text-black text-xs py-2.5 rounded-xl font-black cursor-pointer hover:bg-zinc-200 transition">حفظ المظهر والشريط 💾</button>
@@ -179,27 +202,12 @@
             <!-- إعدادات المتجر والدفع -->
             <div class="vanilla-card p-4 rounded-2xl space-y-3">
                 <h4 class="font-bold text-white text-xs">⚙️ إعدادات المتجر والدفع:</h4>
-                <div>
-                    <label class="block text-zinc-400 text-[11px] mb-1">رقم واتساب الأوردرات:</label>
-                    <input type="text" id="admin-whatsapp" placeholder="201000000000..." class="w-full bg-black/60 border border-white/10 rounded-xl px-3 py-2 text-xs text-white">
-                </div>
-                <div>
-                    <label class="block text-zinc-400 text-[11px] mb-1">حساب انستاباي:</label>
-                    <input type="text" id="instapay-link" placeholder="store@instapay..." class="w-full bg-black/60 border border-white/10 rounded-xl px-3 py-2 text-xs text-white">
-                </div>
+                <input type="text" id="admin-whatsapp" placeholder="رقم واتساب الأوردرات..." class="w-full bg-black/60 border border-white/10 rounded-xl px-3 py-2 text-xs text-white">
+                <input type="text" id="instapay-link" placeholder="حساب انستاباي..." class="w-full bg-black/60 border border-white/10 rounded-xl px-3 py-2 text-xs text-white">
                 <div class="grid grid-cols-3 gap-1.5">
-                    <div>
-                        <label class="block text-zinc-400 text-[10px] mb-1">اسم المحفظة:</label>
-                        <input type="text" id="wallet-name" placeholder="فودافون كاش" class="w-full bg-black/60 border border-white/10 rounded-xl px-2 py-2 text-xs text-white">
-                    </div>
-                    <div>
-                        <label class="block text-zinc-400 text-[10px] mb-1">رقم المحفظة:</label>
-                        <input type="text" id="wallet-number" placeholder="010..." class="w-full bg-black/60 border border-white/10 rounded-xl px-2 py-2 text-xs text-white">
-                    </div>
-                    <div>
-                        <label class="block text-zinc-400 text-[10px] mb-1">اسم صاحبها:</label>
-                        <input type="text" id="wallet-owner" placeholder="محمد أحمد" class="w-full bg-black/60 border border-white/10 rounded-xl px-2 py-2 text-xs text-white">
-                    </div>
+                    <input type="text" id="wallet-name" placeholder="اسم المحفظة" class="w-full bg-black/60 border border-white/10 rounded-xl px-2 py-2 text-xs text-white">
+                    <input type="text" id="wallet-number" placeholder="رقم المحفظة" class="w-full bg-black/60 border border-white/10 rounded-xl px-2 py-2 text-xs text-white">
+                    <input type="text" id="wallet-owner" placeholder="اسم صاحبها" class="w-full bg-black/60 border border-white/10 rounded-xl px-2 py-2 text-xs text-white">
                 </div>
                 <button onclick="saveStoreSettings()" class="w-full bg-white text-black text-xs py-2.5 rounded-xl font-black cursor-pointer hover:bg-zinc-200 transition">حفظ إعدادات الدفع 💾</button>
             </div>
@@ -212,21 +220,18 @@
                 <input type="text" id="social-tt" placeholder="رابط تيك توك..." class="w-full bg-black/60 border border-white/10 rounded-xl px-3 py-2 text-xs text-white">
                 <input type="text" id="social-tg" placeholder="رابط تليجرام..." class="w-full bg-black/60 border border-white/10 rounded-xl px-3 py-2 text-xs text-white">
                 <input type="text" id="social-wa" placeholder="رابط واتساب..." class="w-full bg-black/60 border border-white/10 rounded-xl px-3 py-2 text-xs text-white">
-                <input type="text" id="store-location" placeholder="رابط خرائط جوجل (Location)..." class="w-full bg-black/60 border border-white/10 rounded-xl px-3 py-2 text-xs text-white">
+                <input type="text" id="store-location" placeholder="رابط خرائط جوجل..." class="w-full bg-black/60 border border-white/10 rounded-xl px-3 py-2 text-xs text-white">
                 <button onclick="saveSocialSettings()" class="w-full bg-white text-black text-xs py-2.5 rounded-xl font-black cursor-pointer hover:bg-zinc-200 transition">حفظ السوشيال واللوكيشن 📱</button>
             </div>
 
-            <!-- إضافة منتج جديد (مع تحديد نسبة الخصم إن وجد) -->
+            <!-- إضافة منتج جديد -->
             <div class="vanilla-card p-4 rounded-2xl space-y-3">
                 <h4 class="font-bold text-white text-xs">➕ إضافة منتج جديد (أو عرض):</h4>
                 <input type="text" id="p-name" placeholder="اسم المنتج..." class="w-full bg-black/60 border border-white/10 rounded-xl px-3 py-2 text-xs text-white">
-                <input type="text" id="p-cat" placeholder="القسم (مثال: Makeup & Accessories أو العروض 🔥)..." class="w-full bg-black/60 border border-white/10 rounded-xl px-3 py-2 text-xs text-white" value="Makeup 💄">
+                <input type="text" id="p-cat" placeholder="القسم..." class="w-full bg-black/60 border border-white/10 rounded-xl px-3 py-2 text-xs text-white" value="Makeup 💄">
                 <input type="number" id="p-price" placeholder="السعر الأصلي (ج.م)..." class="w-full bg-black/60 border border-white/10 rounded-xl px-3 py-2 text-xs text-white">
-                <input type="number" id="p-discount" placeholder="نسبة الخصم % (اختياري، مثلاً 20)..." class="w-full bg-black/60 border border-white/10 rounded-xl px-3 py-2 text-xs text-white">
-                <div>
-                    <label class="block text-zinc-400 text-[11px] mb-1">اختر صورة المنتج:</label>
-                    <input type="file" id="p-img-file" accept="image/*" class="w-full text-xs text-zinc-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-white file:text-black hover:file:bg-zinc-200 cursor-pointer">
-                </div>
+                <input type="number" id="p-discount" placeholder="نسبة الخصم % (اختياري)..." class="w-full bg-black/60 border border-white/10 rounded-xl px-3 py-2 text-xs text-white">
+                <input type="file" id="p-img-file" accept="image/*" class="w-full text-xs text-zinc-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-white file:text-black hover:file:bg-zinc-200 cursor-pointer">
                 <button onclick="addNewProductCloud()" class="w-full bg-white text-black text-xs py-2.5 rounded-xl font-black cursor-pointer hover:bg-zinc-200 transition">نشر المنتج سحابياً 🚀</button>
             </div>
 
@@ -236,7 +241,7 @@
                 <div id="admin-products-list" class="space-y-2"></div>
             </div>
 
-            <!-- أوردرات العملاء الواردة سحابياً -->
+            <!-- أوردرات العملاء الواردة سحابياً (مع زرار تسليم الأوردر) -->
             <div class="space-y-2 pt-4 border-t border-white/10">
                 <h4 class="font-bold text-zinc-300 text-xs">📋 أوردرات العملاء الواردة سحابياً (Real-time):</h4>
                 <div id="cloud-orders-list" class="space-y-2"></div>
@@ -602,16 +607,34 @@
             } catch (error) { alert("خطأ: " + error.message); }
         }
 
+        // جلب الأوردرات وحساب الإحصائيات الشاملة باللحظة (Analytics)
         function loadCloudOrdersRealtime() {
             let list = document.getElementById('cloud-orders-list');
             db.collection("vanilla_orders").orderBy("createdAt", "desc").onSnapshot(snapshot => {
+                let totalSales = 0;
+                let totalOrders = snapshot.size;
+                let deliveredCount = 0;
+                let pendingCount = 0;
+
                 if(snapshot.empty) {
                     list.innerHTML = `<p class="text-xs text-zinc-500 text-center py-3">لا توجد أوردرات حالياً..</p>`;
+                    updateAnalyticsUI(0, 0, 0, 0);
                     return;
                 }
+
                 list.innerHTML = "";
                 snapshot.forEach(doc => {
                     let o = doc.data();
+                    let docId = doc.id;
+                    let isDelivered = o.status && o.status.includes('تم التسليم');
+
+                    if(isDelivered) {
+                        deliveredCount++;
+                        totalSales += (o.total || 0);
+                    } else {
+                        pendingCount++;
+                    }
+
                     let itemsStr = o.items ? o.items.map(i => `• ${i.name} (عدد ${i.qty})`).join('<br>') : '';
                     let screenHtml = o.transferScreen ? `<a href="${o.transferScreen}" target="_blank" class="block bg-zinc-900 text-white text-center py-1.5 rounded-lg font-bold border border-white/20 mt-2">👁️ عرض سكرين شوت التحويل</a>` : '';
                     
@@ -622,11 +645,32 @@
                             <p class="text-emerald-400 font-semibold">💳 ${o.payment}</p>
                             <div class="bg-black/60 p-2 rounded text-zinc-300 border border-white/10">${itemsStr}</div>
                             ${screenHtml}
-                            <p class="text-emerald-400 font-bold mt-1">${o.status}</p>
+                            <div class="flex justify-between items-center pt-2 border-t border-white/10">
+                                <span class="font-bold ${isDelivered ? 'text-emerald-400' : 'text-amber-400'}">${o.status}</span>
+                                ${!isDelivered ? `<button onclick="markAsDelivered('${docId}')" class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 px-3 py-1.5 rounded-lg font-bold cursor-pointer hover:bg-emerald-500/30 transition">تسليم الأوردر ✅</button>` : '<span class="text-zinc-500 font-bold">منتهي ✔</span>'}
+                            </div>
                         </div>
                     `;
                 });
+
+                updateAnalyticsUI(totalSales, totalOrders, deliveredCount, pendingCount);
             });
+        }
+
+        function updateAnalyticsUI(sales, orders, delivered, pending) {
+            document.getElementById('stat-total-sales').innerText = sales + " ج.م";
+            document.getElementById('stat-total-orders').innerText = orders;
+            document.getElementById('stat-delivered-orders').innerText = delivered;
+            document.getElementById('stat-pending-orders').innerText = pending;
+        }
+
+        async function markAsDelivered(docId) {
+            try {
+                await db.collection("vanilla_orders").doc(docId).update({ status: 'تم التسليم بنجاح 🟢' });
+                alert("تم تحديث حالة الأوردر إلى (تم التسليم بنجاح) وتمت إضافة المبيعات للإحصائيات! 🟢");
+            } catch(err) {
+                alert("خطأ: " + err.message);
+            }
         }
 
         function addNewProductCloud() {
