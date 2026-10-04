@@ -16,36 +16,54 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
-        body { font-family: 'Cairo', sans-serif; background-color: #0b0a0f; color: #fdfcff; }
-        .vanilla-card { background: rgba(22, 20, 28, 0.95); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); }
-        .vanilla-glow { box-shadow: 0 0 40px rgba(255, 255, 255, 0.04); }
-        .vanilla-border { border: 1px solid rgba(255, 255, 255, 0.12); }
+        body { font-family: 'Cairo', sans-serif; transition: background 0.3s ease, color 0.3s ease; }
+        /* وضع الدارك (الافتراضي) */
+        body.dark-mode { background-color: #0b0a0f; color: #fdfcff; }
+        body.dark-mode .vanilla-card { background: rgba(22, 20, 28, 0.95); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); color: #fdfcff; }
+        body.dark-mode .vanilla-glow { box-shadow: 0 0 40px rgba(255, 255, 255, 0.04); }
+        body.dark-mode .vanilla-border { border: 1px solid rgba(255, 255, 255, 0.12); }
+        body.dark-mode .input-theme { background: rgba(0, 0, 0, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); color: #fff; }
+
+        /* وضع اللايت (المضيء) */
+        body.light-mode { background-color: #f8f7fc; color: #1a1823; }
+        body.light-mode .vanilla-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(16px); border: 1px solid rgba(0, 0, 0, 0.08); color: #1a1823; }
+        body.light-mode .vanilla-glow { box-shadow: 0 0 40px rgba(0, 0, 0, 0.05); }
+        body.light-mode .vanilla-border { border: 1px solid rgba(0, 0, 0, 0.1); }
+        body.light-mode .input-theme { background: #f0edf6; border: 1px solid rgba(0, 0, 0, 0.1); color: #000; }
+        body.light-mode .text-white { color: #1a1823 !important; }
+        body.light-mode .text-zinc-300, body.light-mode .text-zinc-400 { color: #4a4556 !important; }
+        body.light-mode .bg-black\/60, body.light-mode .bg-black\/70, body.light-mode .bg-black\/80 { background: #f3f0fb !important; color: #000 !important; }
+
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
-<body class="min-h-screen pb-36 selection:bg-white selection:text-black">
+<body class="dark-mode min-h-screen pb-36 selection:bg-white selection:text-black">
 
     <!-- شريط إعلاني فخم -->
     <div id="promo-banner-bar" class="bg-gradient-to-r from-zinc-900 via-zinc-800 to-black text-zinc-300 text-[11px] font-bold py-2 px-4 text-center tracking-wider border-b border-white/10 shadow-lg">
         ✨ Vanilla Store • Makeup & Accessories • أناقتك تبدأ من هنا 🤍
     </div>
 
-    <!-- الهيدر -->
-    <header class="vanilla-card border-b border-white/10 p-4 sticky top-0 z-40">
+    <!-- الهيدر مع زرار تبديل الدارك/لايت مود -->
+    <header class="vanilla-card border-b p-4 sticky top-0 z-40">
         <div class="max-w-md mx-auto flex justify-between items-center">
             <div onclick="handleLogoClick()" class="flex items-center gap-3 cursor-pointer select-none" title="Vanilla Store">
                 <div id="header-logo-container" class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center font-black text-xl vanilla-glow text-black shadow-xl overflow-hidden border border-zinc-300">
                     <span class="text-2xl font-black">V</span>
                 </div>
                 <div class="text-right">
-                    <h1 class="font-black text-sm text-white tracking-wider">VANILLA STORE</h1>
+                    <h1 class="font-black text-sm tracking-wider">VANILLA STORE</h1>
                     <p class="text-[9px] text-zinc-400 font-semibold tracking-widest uppercase">Makeup & Accessories</p>
                 </div>
             </div>
             
             <div class="flex items-center gap-2">
-                <button onclick="toggleWishlistModal()" class="bg-white/10 border border-white/20 text-white p-2 rounded-xl relative hover:bg-white/20 transition cursor-pointer" title="المفضلة">
+                <!-- زرار الدارك/لايت مود -->
+                <button onclick="toggleThemeMode()" id="theme-toggle-btn" class="bg-white/10 border border-white/20 p-2.5 rounded-xl hover:bg-white/20 transition cursor-pointer text-sm" title="تبديل الوضع المظلم/المضيء">
+                    🌙
+                </button>
+                <button onclick="toggleWishlistModal()" class="bg-white/10 border border-white/20 p-2.5 rounded-xl relative hover:bg-white/20 transition cursor-pointer" title="المفضلة">
                     ❤️ <span id="wishlist-header-count" class="absolute -top-1 -right-1 bg-white text-black text-[9px] font-black px-1.5 py-0.2 rounded-full">0</span>
                 </button>
             </div>
@@ -63,8 +81,8 @@
         
         <div class="vanilla-card p-6 rounded-3xl vanilla-glow text-center space-y-3 vanilla-border relative overflow-hidden">
             <div class="absolute -right-6 -top-6 w-24 h-24 bg-white/5 rounded-full blur-xl"></div>
-            <span class="bg-white/10 text-zinc-200 text-[10px] font-extrabold px-3.5 py-1 rounded-full border border-white/20 uppercase tracking-widest">تخفيضات فانيلا الكبرى</span>
-            <h2 class="font-black text-lg text-white">أرقى مستحضرات التجميل والإكسسوارات</h2>
+            <span class="bg-white/10 text-zinc-200 text-[10px] font-extrabold px-3.5 py-1 rounded-full border uppercase tracking-widest">تخفيضات فانيلا الكبرى</span>
+            <h2 class="font-black text-lg">أرقى مستحضرات التجميل والإكسسوارات</h2>
             <p id="store-welcome-text" class="text-xs text-zinc-400">اكتشفي تشكيلة مميزة تليق بسحرك وأناقتك.</p>
             
             <button onclick="filterCat('العروض 🔥')" class="w-full bg-gradient-to-r from-zinc-100 to-zinc-300 hover:from-white hover:to-zinc-200 text-black font-black py-3.5 rounded-2xl shadow-xl transition flex items-center justify-center gap-2 cursor-pointer text-xs">
@@ -74,7 +92,7 @@
 
         <!-- شريط البحث الفوري -->
         <div class="relative">
-            <input type="text" id="live-search-input" oninput="handleSearch(this.value)" placeholder="🔍 ابحثي عن أي عطر أو منتج مكياج..." class="w-full bg-black/70 border border-white/15 rounded-2xl p-3.5 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-white transition">
+            <input type="text" id="live-search-input" oninput="handleSearch(this.value)" placeholder="🔍 ابحثي عن أي عطر أو منتج مكياج..." class="input-theme w-full rounded-2xl p-3.5 text-xs placeholder-zinc-500 focus:outline-none transition">
         </div>
 
         <div>
@@ -88,14 +106,14 @@
 
         <!-- قسم التقييمات -->
         <div class="vanilla-card p-5 rounded-3xl vanilla-border space-y-3">
-            <h4 class="font-bold text-sm text-white flex items-center gap-1.5">⭐ آراء عملائنا المميزين:</h4>
+            <h4 class="font-bold text-sm flex items-center gap-1.5">⭐ آراء عملائنا المميزين:</h4>
             <div class="space-y-2.5 text-xs">
                 <div class="bg-black/60 p-3 rounded-2xl border border-white/10 space-y-1">
-                    <div class="flex justify-between font-bold text-white"><span>سارة أحمد</span><span class="text-amber-400">★★★★★</span></div>
+                    <div class="flex justify-between font-bold"><span>سارة أحمد</span><span class="text-amber-400">★★★★★</span></div>
                     <p class="text-zinc-300">"العطور تحفة وثباتها رهيب، والتوصيل كان في ميعاده بالضبط شكراً Vanilla Store 🤍"</p>
                 </div>
                 <div class="bg-black/60 p-3 rounded-2xl border border-white/10 space-y-1">
-                    <div class="flex justify-between font-bold text-white"><span>مريم محمود</span><span class="text-amber-400">★★★★★</span></div>
+                    <div class="flex justify-between font-bold"><span>مريم محمود</span><span class="text-amber-400">★★★★★</span></div>
                     <p class="text-zinc-300">"المكياج أصلي جداً والأسعار ممتازة، أكيد هكرر التجربة تاني!"</p>
                 </div>
             </div>
@@ -103,36 +121,36 @@
 
         <!-- بيانات العميل والدفع -->
         <div class="vanilla-card p-5 rounded-3xl vanilla-border space-y-4 shadow-xl mt-8">
-            <h4 class="font-bold text-sm text-white flex items-center gap-1.5">📍 بيانات التوصيل والدفع:</h4>
+            <h4 class="font-bold text-sm flex items-center gap-1.5">📍 بيانات التوصيل والدفع:</h4>
             
-            <input type="text" id="cust-name" placeholder="اسمك الكريم..." class="w-full bg-black/60 border border-white/10 rounded-2xl p-3.5 text-xs text-white focus:outline-none focus:border-white">
-            <input type="text" id="cust-phone" placeholder="رقم الموبايل للتواصل..." class="w-full bg-black/60 border border-white/10 rounded-2xl p-3.5 text-xs text-white focus:outline-none focus:border-white">
-            <input type="text" id="cust-address" placeholder="العنوان بالتفصيل (المدينة/الشارع)..." class="w-full bg-black/60 border border-white/10 rounded-2xl p-3.5 text-xs text-white focus:outline-none focus:border-white">
+            <input type="text" id="cust-name" placeholder="اسمك الكريم..." class="input-theme w-full rounded-2xl p-3.5 text-xs focus:outline-none">
+            <input type="text" id="cust-phone" placeholder="رقم الموبايل للتواصل..." class="input-theme w-full rounded-2xl p-3.5 text-xs focus:outline-none">
+            <input type="text" id="cust-address" placeholder="العنوان بالتفصيل (المدينة/الشارع)..." class="input-theme w-full rounded-2xl p-3.5 text-xs focus:outline-none">
             
-            <div class="flex gap-2 pt-2 border-t border-white/10">
-                <input type="text" id="coupon-input" placeholder="أدخل كود الخصم (إن وجد)..." class="flex-1 bg-black/60 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white uppercase">
-                <button type="button" onclick="applyCoupon()" class="bg-zinc-800 hover:bg-zinc-700 text-white px-4 rounded-xl text-xs font-bold border border-white/10 cursor-pointer">تطبيق 🏷️</button>
+            <div class="flex gap-2 pt-2 border-t">
+                <input type="text" id="coupon-input" placeholder="أدخل كود الخصم (إن وجد)..." class="input-theme flex-1 rounded-xl px-3 py-2.5 text-xs uppercase">
+                <button type="button" onclick="applyCoupon()" class="bg-zinc-800 hover:bg-zinc-700 text-white px-4 rounded-xl text-xs font-bold border cursor-pointer">تطبيق 🏷️</button>
             </div>
             <p id="coupon-msg" class="text-[11px] font-semibold text-emerald-400 hidden"></p>
 
             <div class="space-y-2 pt-1">
-                <label class="block text-xs font-bold text-zinc-300">💳 اختر طريقة الدفع:</label>
+                <label class="block text-xs font-bold">💳 اختر طريقة الدفع:</label>
                 <div class="grid grid-cols-2 gap-2">
-                    <button type="button" onclick="setPaymentMethod('COD')" id="pay-cod-btn" class="p-3 rounded-2xl text-xs font-bold border border-white bg-white text-black cursor-pointer">دفع عند الاستلام 💵</button>
-                    <button type="button" onclick="setPaymentMethod('ONLINE')" id="pay-online-btn" class="p-3 rounded-2xl text-xs font-bold border border-white/20 bg-black/50 text-zinc-300 cursor-pointer">انستاباي / محفظة 📱</button>
+                    <button type="button" onclick="setPaymentMethod('COD')" id="pay-cod-btn" class="p-3 rounded-2xl text-xs font-bold border bg-white text-black cursor-pointer">دفع عند الاستلام 💵</button>
+                    <button type="button" onclick="setPaymentMethod('ONLINE')" id="pay-online-btn" class="p-3 rounded-2xl text-xs font-bold border bg-black/50 text-zinc-300 cursor-pointer">انستاباي / محفظة 📱</button>
                 </div>
             </div>
 
-            <div id="online-payment-box" class="hidden bg-black/80 p-4 rounded-2xl border border-white/20 space-y-3 text-xs">
+            <div id="online-payment-box" class="hidden bg-black/80 p-4 rounded-2xl border space-y-3 text-xs">
                 <p id="payment-instructions" class="text-zinc-300 font-semibold leading-relaxed"></p>
-                <button type="button" id="copy-wallet-btn" onclick="copyWalletNumber()" class="w-full bg-zinc-800 hover:bg-zinc-700 text-white py-2.5 rounded-xl font-bold border border-white/10 transition hidden">📋 نسخ رقم المحفظة</button>
+                <button type="button" id="copy-wallet-btn" onclick="copyWalletNumber()" class="w-full bg-zinc-800 hover:bg-zinc-700 text-white py-2.5 rounded-xl font-bold border transition hidden">📋 نسخ رقم المحفظة</button>
                 <a id="instapay-direct-btn" href="#" target="_blank" class="w-full bg-white hover:bg-zinc-200 text-black py-3 rounded-xl font-black text-center flex items-center justify-center gap-2 shadow-lg transition hidden">🚀 فتح تطبيق انستاباي للتحويل فوراً</a>
                 <div>
                     <label class="block text-zinc-400 mb-1">📸 ارفع سكرين شوت التحويل:</label>
                     <input type="file" id="transfer-screen-file" accept="image/*" class="w-full text-xs text-zinc-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-white file:text-black hover:file:bg-zinc-200 cursor-pointer">
                 </div>
                 <div id="screen-preview-container" class="hidden mt-2">
-                    <img id="screen-preview-img" class="w-full h-32 object-cover rounded-xl border border-white/10">
+                    <img id="screen-preview-img" class="w-full h-32 object-cover rounded-xl border">
                 </div>
             </div>
 
@@ -142,7 +160,7 @@
         </div>
 
         <footer class="vanilla-card p-5 rounded-3xl vanilla-border space-y-3 text-center mt-10">
-            <h4 class="font-bold text-xs text-zinc-300 uppercase tracking-wider">📍 تواصل معنا وعنوان المحل</h4>
+            <h4 class="font-bold text-xs uppercase tracking-wider">📍 تواصل معنا وعنوان المحل</h4>
             <div id="footer-socials" class="grid grid-cols-2 gap-2.5 pt-1"></div>
         </footer>
 
@@ -150,18 +168,18 @@
 
     <!-- سلة المشتريات -->
     <div id="cart-drawer" class="fixed inset-0 bg-black/85 backdrop-blur-sm hidden z-50 flex justify-end">
-        <div class="vanilla-card w-full max-w-sm h-full p-5 flex flex-col justify-between space-y-4 overflow-y-auto border-l border-white/10">
-            <div class="flex justify-between items-center border-b border-white/10 pb-3">
-                <h3 class="font-black text-base text-white">🛒 سلة المشتريات</h3>
-                <button onclick="toggleCartModal()" class="bg-zinc-900 px-3 py-1.5 rounded-xl text-xs text-white cursor-pointer font-bold border border-white/10">✕ إغلاق</button>
+        <div class="vanilla-card w-full max-w-sm h-full p-5 flex flex-col justify-between space-y-4 overflow-y-auto border-l">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h3 class="font-black text-base">🛒 سلة المشتريات</h3>
+                <button onclick="toggleCartModal()" class="bg-zinc-900 px-3 py-1.5 rounded-xl text-xs text-white cursor-pointer font-bold border">✕ إغلاق</button>
             </div>
             <div id="cart-items" class="space-y-2 flex-1 overflow-y-auto text-xs text-zinc-300">
                 <p class="text-center text-zinc-500 py-6">السلة فارغة..</p>
             </div>
-            <div class="space-y-3 pt-3 border-t border-white/10">
+            <div class="space-y-3 pt-3 border-t">
                 <div class="flex justify-between items-center font-bold text-sm">
                     <span class="text-zinc-400">الإجمالي الكلي:</span>
-                    <span id="cart-total" class="text-white text-base">0 ج.م</span>
+                    <span id="cart-total" class="text-base">0 ج.م</span>
                 </div>
                 <button onclick="toggleCartModal(); document.getElementById('cust-name').scrollIntoView({behavior: 'smooth'});" class="w-full bg-white text-black py-3.5 rounded-2xl font-black text-xs cursor-pointer hover:bg-zinc-200 transition">تأكيد واكتب بيانات التوصيل 📍</button>
             </div>
@@ -170,10 +188,10 @@
 
     <!-- نافذة المفضلة -->
     <div id="wishlist-drawer" class="fixed inset-0 bg-black/85 backdrop-blur-sm hidden z-50 flex justify-end">
-        <div class="vanilla-card w-full max-w-sm h-full p-5 flex flex-col justify-between space-y-4 overflow-y-auto border-l border-white/10">
-            <div class="flex justify-between items-center border-b border-white/10 pb-3">
-                <h3 class="font-black text-base text-white">❤️ قائمة المفضلة</h3>
-                <button onclick="toggleWishlistModal()" class="bg-zinc-900 px-3 py-1.5 rounded-xl text-xs text-white cursor-pointer font-bold border border-white/10">✕ إغلاق</button>
+        <div class="vanilla-card w-full max-w-sm h-full p-5 flex flex-col justify-between space-y-4 overflow-y-auto border-l">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h3 class="font-black text-base">❤️ قائمة المفضلة</h3>
+                <button onclick="toggleWishlistModal()" class="bg-zinc-900 px-3 py-1.5 rounded-xl text-xs text-white cursor-pointer font-bold border">✕ إغلاق</button>
             </div>
             <div id="wishlist-items" class="space-y-2 flex-1 overflow-y-auto text-xs text-zinc-300">
                 <p class="text-center text-zinc-500 py-6">المفضلة فارغة..</p>
@@ -182,7 +200,7 @@
     </div>
 
     <!-- لوحة تحكم المحل -->
-    <div id="admin-dashboard" class="fixed inset-0 bg-black/95 hidden z-50 overflow-y-auto p-4">
+    <div id="admin-dashboard" class="fixed inset-0 bg-black/95 hidden z-50 overflow-y-auto p-4 text-white">
         <div class="max-w-md mx-auto space-y-4 py-6">
             <div class="flex justify-between items-center border-b border-white/10 pb-3">
                 <h3 class="font-black text-base text-white">🔐 لوحة تحكم Vanilla Store</h3>
@@ -192,7 +210,6 @@
                 </div>
             </div>
 
-            <!-- محتوى تقارير الـ PDF المخفي الذي سيتم طباعته -->
             <div id="pdf-report-content" class="hidden p-4 bg-white text-black rounded-xl text-right">
                 <h2 style="text-align: center; font-weight: bold; font-size: 18px; margin-bottom: 5px;">Vanilla Store - تقرير المبيعات والأوردرات</h2>
                 <p style="text-align: center; font-size: 10px; color: #555; margin-bottom: 15px;">تاريخ التقرير: <span id="pdf-date-span"></span></p>
@@ -293,11 +310,11 @@
     <!-- نافذة دخول الإدارة السرية -->
     <div id="admin-pin-modal" class="fixed inset-0 bg-black/90 backdrop-blur-sm hidden z-60 flex items-center justify-center p-4">
         <div class="vanilla-card w-full max-w-sm p-6 rounded-3xl space-y-4 border border-white/20">
-            <h3 class="font-black text-base text-white">🔐 أدخل الرقم السري لوحة الإدارة</h3>
-            <input type="password" id="pin-input" placeholder="••••" class="w-full bg-black/60 border border-white/10 rounded-2xl p-3.5 text-center text-white tracking-widest text-lg">
+            <h3 class="font-black text-base">🔐 أدخل الرقم السري لوحة الإدارة</h3>
+            <input type="password" id="pin-input" placeholder="••••" class="input-theme w-full rounded-2xl p-3.5 text-center tracking-widest text-lg focus:outline-none">
             <div class="flex gap-2">
                 <button onclick="verifyAdminPin()" class="flex-1 bg-white text-black py-3 rounded-xl font-black cursor-pointer hover:bg-zinc-200 transition">دخول</button>
-                <button onclick="document.getElementById('admin-pin-modal').classList.add('hidden')" class="flex-1 bg-zinc-900 text-zinc-300 py-3 rounded-xl cursor-pointer border border-white/10">إلغاء</button>
+                <button onclick="document.getElementById('admin-pin-modal').classList.add('hidden')" class="flex-1 bg-zinc-900 text-zinc-300 py-3 rounded-xl cursor-pointer border">إلغاء</button>
             </div>
         </div>
     </div>
@@ -325,6 +342,7 @@
         let adminPin = localStorage.getItem('vanilla_admin_pin') || "1234";
         let promoText = localStorage.getItem('vanilla_promo') || "✨ Vanilla Store • Makeup & Accessories • أناقتك تبدأ من هنا 🤍";
         let storeLogo = localStorage.getItem('vanilla_logo') || "";
+        let currentTheme = localStorage.getItem('vanilla_theme') || "dark";
         
         let activeCoupon = JSON.parse(localStorage.getItem('vanilla_active_coupon')) || { code: "VANILLA10", discount: 10 };
 
@@ -352,15 +370,35 @@
             { id: 2, name: "مجموعة روج سائل فانيلا مات", price: 250, discount: 0, category: "Makeup 💄", image: "https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=500", available: true }
         ];
 
+        // تطبيق الثيم (Dark / Light)
+        function applyThemeMode() {
+            let body = document.body;
+            let btn = document.getElementById('theme-toggle-btn');
+            if(currentTheme === 'light') {
+                body.className = "light-mode min-h-screen pb-36 selection:bg-black selection:text-white";
+                btn.innerText = "☀️";
+            } else {
+                body.className = "dark-mode min-h-screen pb-36 selection:bg-white selection:text-black";
+                btn.innerText = "🌙";
+            }
+            localStorage.setItem('vanilla_theme', currentTheme);
+        }
+
+        function toggleThemeMode() {
+            currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            applyThemeMode();
+        }
+
         function applyThemeSettings() {
             document.getElementById('promo-banner-bar').innerText = promoText;
             let logoContainer = document.getElementById('header-logo-container');
             if(storeLogo) {
                 logoContainer.innerHTML = `<img src="${storeLogo}" class="w-full h-full object-cover">`;
             } else {
-                logoContainer.innerHTML = `<span class="text-2xl font-black text-black">V</span>`;
+                logoContainer.innerHTML = `<span class="text-2xl font-black">V</span>`;
             }
             renderWishlistCount();
+            applyThemeMode();
         }
 
         let logoClicks = 0;
@@ -438,12 +476,12 @@
         function renderFooterSocials() {
             let container = document.getElementById('footer-socials');
             container.innerHTML = `
-                <a href="${socialLinks.fb}" target="_blank" class="bg-black/60 border border-white/10 text-zinc-200 text-xs p-3 rounded-xl font-bold flex items-center justify-center gap-1.5 hover:bg-zinc-800 transition">📘 فيسبوك</a>
-                <a href="${socialLinks.ig}" target="_blank" class="bg-black/60 border border-white/10 text-zinc-200 text-xs p-3 rounded-xl font-bold flex items-center justify-center gap-1.5 hover:bg-zinc-800 transition">📸 انستجرام</a>
-                <a href="${socialLinks.tt}" target="_blank" class="bg-black/60 border border-white/10 text-zinc-200 text-xs p-3 rounded-xl font-bold flex items-center justify-center gap-1.5 hover:bg-zinc-800 transition">🎵 تيك توك</a>
-                <a href="${socialLinks.tg}" target="_blank" class="bg-black/60 border border-white/10 text-zinc-200 text-xs p-3 rounded-xl font-bold flex items-center justify-center gap-1.5 hover:bg-zinc-800 transition">✈ تليجرام</a>
-                <a href="${socialLinks.wa}" target="_blank" class="bg-black/60 border border-white/10 text-emerald-400 text-xs p-3 rounded-xl font-bold flex items-center justify-center gap-1.5 hover:bg-zinc-800 transition">💬 واتساب</a>
-                <a href="${socialLinks.location}" target="_blank" class="bg-black/60 border border-white/10 text-cyan-400 text-xs p-3 rounded-xl font-bold flex items-center justify-center gap-1.5 hover:bg-zinc-800 transition">📍 لوكيشن المحل</a>
+                <a href="${socialLinks.fb}" target="_blank" class="vanilla-card border text-xs p-3 rounded-xl font-bold flex items-center justify-center gap-1.5 transition">📘 فيسبوك</a>
+                <a href="${socialLinks.ig}" target="_blank" class="vanilla-card border text-xs p-3 rounded-xl font-bold flex items-center justify-center gap-1.5 transition">📸 انستجرام</a>
+                <a href="${socialLinks.tt}" target="_blank" class="vanilla-card border text-xs p-3 rounded-xl font-bold flex items-center justify-center gap-1.5 transition">🎵 تيك توك</a>
+                <a href="${socialLinks.tg}" target="_blank" class="vanilla-card border text-xs p-3 rounded-xl font-bold flex items-center justify-center gap-1.5 transition">✈ تليجرام</a>
+                <a href="${socialLinks.wa}" target="_blank" class="vanilla-card border text-emerald-400 text-xs p-3 rounded-xl font-bold flex items-center justify-center gap-1.5 transition">💬 واتساب</a>
+                <a href="${socialLinks.location}" target="_blank" class="vanilla-card border text-cyan-400 text-xs p-3 rounded-xl font-bold flex items-center justify-center gap-1.5 transition">📍 لوكيشن المحل</a>
             `;
         }
 
@@ -460,12 +498,12 @@
             let cartTotal = Math.round(subtotal * (1 - appliedCouponDiscount / 100));
 
             if(method === 'COD') {
-                codBtn.className = "p-3 rounded-2xl text-xs font-bold border border-white bg-white text-black cursor-pointer";
-                onlineBtn.className = "p-3 rounded-2xl text-xs font-bold border border-white/20 bg-black/50 text-zinc-300 cursor-pointer";
+                codBtn.className = "p-3 rounded-2xl text-xs font-bold border bg-white text-black cursor-pointer";
+                onlineBtn.className = "p-3 rounded-2xl text-xs font-bold border bg-black/50 text-zinc-300 cursor-pointer";
                 box.classList.add('hidden');
             } else {
-                onlineBtn.className = "p-3 rounded-2xl text-xs font-bold border border-white bg-white text-black cursor-pointer";
-                codBtn.className = "p-3 rounded-2xl text-xs font-bold border border-white/20 bg-black/50 text-zinc-300 cursor-pointer";
+                onlineBtn.className = "p-3 rounded-2xl text-xs font-bold border bg-white text-black cursor-pointer";
+                codBtn.className = "p-3 rounded-2xl text-xs font-bold border bg-black/50 text-zinc-300 cursor-pointer";
                 box.classList.remove('hidden');
                 
                 inst.innerHTML = `💳 تفاصيل الدفع الإلكتروني:<br>• انستاباي: <b>${instapay}</b><br>• ${walletName}: <b>${walletNumber}</b> (باسم: <b>${walletOwner}</b>)<br>الإجمالي المطلوب: <b>${cartTotal} ج.م</b>`;
@@ -531,7 +569,7 @@
             bar.innerHTML = "";
             cats.forEach(c => {
                 let active = currentCategory === c;
-                bar.innerHTML += `<button onclick="filterCat('${c}')" class="text-xs px-4 py-2 rounded-xl cursor-pointer whitespace-nowrap ${active ? 'bg-white font-black text-black shadow-lg' : 'vanilla-card text-zinc-300'}">${c}</button>`;
+                bar.innerHTML += `<button onclick="filterCat('${c}')" class="text-xs px-4 py-2 rounded-xl cursor-pointer whitespace-nowrap ${active ? 'bg-white font-black text-black shadow-lg' : 'vanilla-card'}">${c}</button>`;
             });
         }
 
@@ -561,10 +599,10 @@
                 let discBadge = p.discount > 0 ? `<span class="absolute top-2 right-2 bg-white text-black text-[10px] font-black px-2.5 py-1 rounded-full shadow-lg">خصم ${p.discount}% 🔥</span>` : '';
                 let priceHtml = p.discount > 0 ? `
                     <div class="flex items-center gap-1.5">
-                        <span class="text-white font-black text-xs">${p.finalPrice} ج.م</span>
+                        <span class="font-black text-xs">${p.finalPrice} ج.م</span>
                         <span class="text-zinc-500 text-[10px] line-through">${p.price} ج.م</span>
                     </div>
-                ` : `<span class="text-white font-black text-xs">${p.price} ج.م</span>`;
+                ` : `<span class="font-black text-xs">${p.price} ج.م</span>`;
 
                 grid.innerHTML += `
                     <div class="vanilla-card p-3 rounded-3xl flex flex-col justify-between space-y-2 shadow relative overflow-hidden">
@@ -572,10 +610,10 @@
                         <button onclick="toggleWishlist('${p.id}')" class="absolute top-2 left-2 bg-black/60 p-1.5 rounded-full border border-white/10 text-xs cursor-pointer hover:bg-black/90 transition">
                             ${isFav ? '❤️' : '🤍'}
                         </button>
-                        <img src="${p.image}" class="w-full h-28 object-cover rounded-2xl border border-white/10">
+                        <img src="${p.image}" class="w-full h-28 object-cover rounded-2xl border">
                         <div>
-                            <span class="text-[9px] bg-white/10 text-zinc-300 px-2 py-0.5 rounded font-bold">${p.category}</span>
-                            <h4 class="font-bold text-white text-xs mt-1 line-clamp-1">${p.name}</h4>
+                            <span class="text-[9px] bg-white/10 px-2 py-0.5 rounded font-bold">${p.category}</span>
+                            <h4 class="font-bold text-xs mt-1 line-clamp-1">${p.name}</h4>
                             ${priceHtml}
                         </div>
                         <button onclick="addToCart('${p.id}')" class="w-full bg-white hover:bg-zinc-200 text-black py-2 rounded-xl text-xs font-black cursor-pointer transition">إضافة للسلة 🛍️</button>
@@ -617,10 +655,10 @@
             container.innerHTML = "";
             wishlist.forEach((i, idx) => {
                 container.innerHTML += `
-                    <div class="flex justify-between items-center bg-black/60 p-2.5 rounded-xl border border-white/10">
+                    <div class="vanilla-card flex justify-between items-center p-2.5 rounded-xl border">
                         <div class="flex items-center gap-2">
                             <img src="${i.image}" class="w-10 h-10 object-cover rounded-lg">
-                            <div><p class="font-bold text-white">${i.name}</p><span class="text-zinc-400">${i.finalPrice} ج.م</span></div>
+                            <div><p class="font-bold">${i.name}</p><span class="text-zinc-400">${i.finalPrice} ج.م</span></div>
                         </div>
                         <div class="flex items-center gap-2">
                             <button onclick="addToCart('${i.id}'); toggleWishlistModal();" class="bg-white text-black px-2.5 py-1.5 rounded-lg font-black text-[10px]">شراء 🛍️</button>
@@ -704,9 +742,9 @@
                 let sub = i.finalPrice * i.qty;
                 subtotal += sub;
                 container.innerHTML += `
-                    <div class="flex justify-between items-center bg-black/60 p-2.5 rounded-xl border border-white/10">
-                        <div><p class="font-bold text-white">${i.name}</p><p class="text-[10px] text-zinc-400">العدد: ${i.qty}</p></div>
-                        <div class="flex items-center gap-2"><span class="text-white font-bold">${sub} ج.م</span><button onclick="cart.splice(${idx},1);renderCart();" class="text-red-400 cursor-pointer">✕</button></div>
+                    <div class="vanilla-card flex justify-between items-center p-2.5 rounded-xl border">
+                        <div><p class="font-bold">${i.name}</p><p class="text-[10px] text-zinc-400">العدد: ${i.qty}</p></div>
+                        <div class="flex items-center gap-2"><span class="font-bold">${sub} ج.م</span><button onclick="cart.splice(${idx},1);renderCart();" class="text-red-400 cursor-pointer">✕</button></div>
                     </div>
                 `;
             });
@@ -746,7 +784,7 @@
                 await db.collection("vanilla_orders").add(orderData);
 
                 let text = `🛍️ أوردر جديد من Vanilla Store:\n📌 رقم الأوردر: ${orderId}\n👤 العميلة: ${name}\n📞 الهاتف: ${phone}\n📍 العنوان: ${address}\n💳 طريقة الدفع: ${orderData.payment}\n`;
-                if(appliedCouponDiscount > 0) text += `🎟️️ الكوبون المستخدم: ${activeCoupon.code} (خصم ${appliedCouponDiscount}%)\n`;
+                if(appliedCouponDiscount > 0) text += `🎟 الكوبون المستخدم: ${activeCoupon.code} (خصم ${appliedCouponDiscount}%)\n`;
                 text += `\nالمنتجات:\n`;
                 cart.forEach(i => { text += `- ${i.name} (عدد: ${i.qty}) | ${i.finalPrice * i.qty} ج.م\n`; });
                 text += `\n💰 الإجمالي الكلي: ${total} ج.م`;
@@ -800,8 +838,8 @@
                     let screenHtml = o.transferScreen ? `<a href="${o.transferScreen}" target="_blank" class="block bg-zinc-900 text-white text-center py-1.5 rounded-lg font-bold border border-white/20 mt-2">👁️ عرض سكرين شوت التحويل</a>` : '';
                     
                     list.innerHTML += `
-                        <div class="vanilla-card p-3 rounded-xl text-xs space-y-1.5 border border-white/10">
-                            <div class="flex justify-between font-bold text-white"><span>${o.orderId} - ${o.name}</span><span class="text-zinc-400 text-[10px]">${dateStr}</span></div>
+                        <div class="vanilla-card p-3 rounded-xl text-xs space-y-1.5 border">
+                            <div class="flex justify-between font-bold"><span>${o.orderId} - ${o.name}</span><span class="text-zinc-400 text-[10px]">${dateStr}</span></div>
                             <p class="text-zinc-300">📞 ${o.phone} | 📍 ${o.address}</p>
                             <p class="text-emerald-400 font-semibold">💳 ${o.payment} | 💰 <b>${o.total} ج.م</b> ${o.coupon !== 'بدون كوبون' ? `(كوبون: ${o.coupon})` : ''}</p>
                             <div class="bg-black/60 p-2 rounded text-zinc-300 border border-white/10">${itemsStr}</div>
@@ -818,7 +856,6 @@
             });
         }
 
-        // تصدير التقارير إلى PDF احترافي
         function exportOrdersPDF() {
             if(ordersDataCache.length === 0) { alert("لا توجد أوردرات لتصديرها!"); return; }
             
