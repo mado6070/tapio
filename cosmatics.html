@@ -12,6 +12,8 @@
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <!-- html2pdf Library for PDF Export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
         body { font-family: 'Cairo', sans-serif; background-color: #0b0a0f; color: #fdfcff; }
@@ -24,15 +26,14 @@
 </head>
 <body class="min-h-screen pb-36 selection:bg-white selection:text-black">
 
-    <!-- شريط إعلاني فخم (يتحدث سحابياً) -->
+    <!-- شريط إعلاني فخم -->
     <div id="promo-banner-bar" class="bg-gradient-to-r from-zinc-900 via-zinc-800 to-black text-zinc-300 text-[11px] font-bold py-2 px-4 text-center tracking-wider border-b border-white/10 shadow-lg">
         ✨ Vanilla Store • Makeup & Accessories • أناقتك تبدأ من هنا 🤍
     </div>
 
-    <!-- الهيدر الأنيق المستوحى من اللوجو -->
+    <!-- الهيدر -->
     <header class="vanilla-card border-b border-white/10 p-4 sticky top-0 z-40">
         <div class="max-w-md mx-auto flex justify-between items-center">
-            <!-- اللوجو (اضغط 5 مرات لفتح الإدارة) -->
             <div onclick="handleLogoClick()" class="flex items-center gap-3 cursor-pointer select-none" title="Vanilla Store">
                 <div id="header-logo-container" class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center font-black text-xl vanilla-glow text-black shadow-xl overflow-hidden border border-zinc-300">
                     <span class="text-2xl font-black">V</span>
@@ -43,7 +44,6 @@
                 </div>
             </div>
             
-            <!-- أزرار المفضلة والسلة الهيدر -->
             <div class="flex items-center gap-2">
                 <button onclick="toggleWishlistModal()" class="bg-white/10 border border-white/20 text-white p-2 rounded-xl relative hover:bg-white/20 transition cursor-pointer" title="المفضلة">
                     ❤️ <span id="wishlist-header-count" class="absolute -top-1 -right-1 bg-white text-black text-[9px] font-black px-1.5 py-0.2 rounded-full">0</span>
@@ -61,25 +61,22 @@
     <!-- المحتوى الرئيسي -->
     <main class="max-w-md mx-auto p-4 space-y-5">
         
-        <!-- بانر ترحيبي مع زرار عروض حصرية -->
         <div class="vanilla-card p-6 rounded-3xl vanilla-glow text-center space-y-3 vanilla-border relative overflow-hidden">
             <div class="absolute -right-6 -top-6 w-24 h-24 bg-white/5 rounded-full blur-xl"></div>
             <span class="bg-white/10 text-zinc-200 text-[10px] font-extrabold px-3.5 py-1 rounded-full border border-white/20 uppercase tracking-widest">تخفيضات فانيلا الكبرى</span>
             <h2 class="font-black text-lg text-white">أرقى مستحضرات التجميل والإكسسوارات</h2>
             <p id="store-welcome-text" class="text-xs text-zinc-400">اكتشفي تشكيلة مميزة تليق بسحرك وأناقتك.</p>
             
-            <!-- زرار الانتقال السريع لقسم العروض -->
             <button onclick="filterCat('العروض 🔥')" class="w-full bg-gradient-to-r from-zinc-100 to-zinc-300 hover:from-white hover:to-zinc-200 text-black font-black py-3.5 rounded-2xl shadow-xl transition flex items-center justify-center gap-2 cursor-pointer text-xs">
                 🔥 تصفح عروض التخفيضات الكبرى الآن
             </button>
         </div>
 
-        <!-- شريط البحث الفوري (Live Search) -->
+        <!-- شريط البحث الفوري -->
         <div class="relative">
             <input type="text" id="live-search-input" oninput="handleSearch(this.value)" placeholder="🔍 ابحثي عن أي عطر أو منتج مكياج..." class="w-full bg-black/70 border border-white/15 rounded-2xl p-3.5 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-white transition">
         </div>
 
-        <!-- أقسام المتجر -->
         <div>
             <div class="flex justify-between items-center mb-2">
                 <h3 class="font-bold text-xs text-zinc-400 uppercase tracking-wider">📂 أقسام المتجر</h3>
@@ -87,10 +84,9 @@
             <div id="categories-bar" class="flex gap-2 overflow-x-auto no-scrollbar pb-1"></div>
         </div>
 
-        <!-- شبكة المنتجات -->
         <div id="products-grid" class="grid grid-cols-2 gap-3.5"></div>
 
-        <!-- قسم تقييمات وآراء العملاء -->
+        <!-- قسم التقييمات -->
         <div class="vanilla-card p-5 rounded-3xl vanilla-border space-y-3">
             <h4 class="font-bold text-sm text-white flex items-center gap-1.5">⭐ آراء عملائنا المميزين:</h4>
             <div class="space-y-2.5 text-xs">
@@ -113,14 +109,12 @@
             <input type="text" id="cust-phone" placeholder="رقم الموبايل للتواصل..." class="w-full bg-black/60 border border-white/10 rounded-2xl p-3.5 text-xs text-white focus:outline-none focus:border-white">
             <input type="text" id="cust-address" placeholder="العنوان بالتفصيل (المدينة/الشارع)..." class="w-full bg-black/60 border border-white/10 rounded-2xl p-3.5 text-xs text-white focus:outline-none focus:border-white">
             
-            <!-- كوبون الخصم -->
             <div class="flex gap-2 pt-2 border-t border-white/10">
                 <input type="text" id="coupon-input" placeholder="أدخل كود الخصم (إن وجد)..." class="flex-1 bg-black/60 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white uppercase">
                 <button type="button" onclick="applyCoupon()" class="bg-zinc-800 hover:bg-zinc-700 text-white px-4 rounded-xl text-xs font-bold border border-white/10 cursor-pointer">تطبيق 🏷️</button>
             </div>
             <p id="coupon-msg" class="text-[11px] font-semibold text-emerald-400 hidden"></p>
 
-            <!-- اختيار طريقة الدفع -->
             <div class="space-y-2 pt-1">
                 <label class="block text-xs font-bold text-zinc-300">💳 اختر طريقة الدفع:</label>
                 <div class="grid grid-cols-2 gap-2">
@@ -129,18 +123,10 @@
                 </div>
             </div>
 
-            <!-- تفاصيل الدفع الإلكتروني -->
             <div id="online-payment-box" class="hidden bg-black/80 p-4 rounded-2xl border border-white/20 space-y-3 text-xs">
                 <p id="payment-instructions" class="text-zinc-300 font-semibold leading-relaxed"></p>
-                
-                <button type="button" id="copy-wallet-btn" onclick="copyWalletNumber()" class="w-full bg-zinc-800 hover:bg-zinc-700 text-white py-2.5 rounded-xl font-bold border border-white/10 transition hidden">
-                    📋 نسخ رقم المحفظة
-                </button>
-
-                <a id="instapay-direct-btn" href="#" target="_blank" class="w-full bg-white hover:bg-zinc-200 text-black py-3 rounded-xl font-black text-center flex items-center justify-center gap-2 shadow-lg transition hidden">
-                    🚀 فتح تطبيق انستاباي للتحويل فوراً
-                </a>
-
+                <button type="button" id="copy-wallet-btn" onclick="copyWalletNumber()" class="w-full bg-zinc-800 hover:bg-zinc-700 text-white py-2.5 rounded-xl font-bold border border-white/10 transition hidden">📋 نسخ رقم المحفظة</button>
+                <a id="instapay-direct-btn" href="#" target="_blank" class="w-full bg-white hover:bg-zinc-200 text-black py-3 rounded-xl font-black text-center flex items-center justify-center gap-2 shadow-lg transition hidden">🚀 فتح تطبيق انستاباي للتحويل فوراً</a>
                 <div>
                     <label class="block text-zinc-400 mb-1">📸 ارفع سكرين شوت التحويل:</label>
                     <input type="file" id="transfer-screen-file" accept="image/*" class="w-full text-xs text-zinc-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-white file:text-black hover:file:bg-zinc-200 cursor-pointer">
@@ -155,7 +141,6 @@
             </button>
         </div>
 
-        <!-- فوتر الصفحة -->
         <footer class="vanilla-card p-5 rounded-3xl vanilla-border space-y-3 text-center mt-10">
             <h4 class="font-bold text-xs text-zinc-300 uppercase tracking-wider">📍 تواصل معنا وعنوان المحل</h4>
             <div id="footer-socials" class="grid grid-cols-2 gap-2.5 pt-1"></div>
@@ -163,18 +148,16 @@
 
     </main>
 
-    <!-- نافذة السلة الجانبية -->
+    <!-- سلة المشتريات -->
     <div id="cart-drawer" class="fixed inset-0 bg-black/85 backdrop-blur-sm hidden z-50 flex justify-end">
         <div class="vanilla-card w-full max-w-sm h-full p-5 flex flex-col justify-between space-y-4 overflow-y-auto border-l border-white/10">
             <div class="flex justify-between items-center border-b border-white/10 pb-3">
                 <h3 class="font-black text-base text-white">🛒 سلة المشتريات</h3>
                 <button onclick="toggleCartModal()" class="bg-zinc-900 px-3 py-1.5 rounded-xl text-xs text-white cursor-pointer font-bold border border-white/10">✕ إغلاق</button>
             </div>
-
             <div id="cart-items" class="space-y-2 flex-1 overflow-y-auto text-xs text-zinc-300">
                 <p class="text-center text-zinc-500 py-6">السلة فارغة..</p>
             </div>
-
             <div class="space-y-3 pt-3 border-t border-white/10">
                 <div class="flex justify-between items-center font-bold text-sm">
                     <span class="text-zinc-400">الإجمالي الكلي:</span>
@@ -185,7 +168,7 @@
         </div>
     </div>
 
-    <!-- نافذة المفضلة (Wishlist Modal) -->
+    <!-- نافذة المفضلة -->
     <div id="wishlist-drawer" class="fixed inset-0 bg-black/85 backdrop-blur-sm hidden z-50 flex justify-end">
         <div class="vanilla-card w-full max-w-sm h-full p-5 flex flex-col justify-between space-y-4 overflow-y-auto border-l border-white/10">
             <div class="flex justify-between items-center border-b border-white/10 pb-3">
@@ -204,12 +187,18 @@
             <div class="flex justify-between items-center border-b border-white/10 pb-3">
                 <h3 class="font-black text-base text-white">🔐 لوحة تحكم Vanilla Store</h3>
                 <div class="flex gap-2">
-                    <button onclick="exportOrdersExcel()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs px-3 py-2 rounded-xl font-bold cursor-pointer">📥 تصدير Excel</button>
+                    <button onclick="exportOrdersPDF()" class="bg-rose-600 hover:bg-rose-500 text-white text-xs px-3 py-2 rounded-xl font-bold cursor-pointer">📄 تحميل PDF</button>
                     <button onclick="closeAdminDashboard()" class="bg-zinc-900 px-3.5 py-2 rounded-xl text-xs text-white cursor-pointer font-bold border border-white/10">إغلاق ✕</button>
                 </div>
             </div>
 
-            <!-- إحصائيات الموقع الشاملة -->
+            <!-- محتوى تقارير الـ PDF المخفي الذي سيتم طباعته -->
+            <div id="pdf-report-content" class="hidden p-4 bg-white text-black rounded-xl text-right">
+                <h2 style="text-align: center; font-weight: bold; font-size: 18px; margin-bottom: 5px;">Vanilla Store - تقرير المبيعات والأوردرات</h2>
+                <p style="text-align: center; font-size: 10px; color: #555; margin-bottom: 15px;">تاريخ التقرير: <span id="pdf-date-span"></span></p>
+                <div id="pdf-table-container"></div>
+            </div>
+
             <div class="vanilla-card p-4 rounded-2xl space-y-3">
                 <h4 class="font-bold text-white text-xs">📊 إحصائيات الموقع الشاملة (Analytics):</h4>
                 <div class="grid grid-cols-2 gap-2.5">
@@ -232,17 +221,15 @@
                 </div>
             </div>
 
-            <!-- إدارة كوبونات الخصم الترويجية -->
             <div class="vanilla-card p-4 rounded-2xl space-y-3">
                 <h4 class="font-bold text-white text-xs">🎟️ إدارة كوبونات الخصم (Promo Codes):</h4>
                 <div class="grid grid-cols-2 gap-2">
-                    <input type="text" id="admin-coupon-code" placeholder="كود الكوبون (مثل: VAN10)" class="bg-black/60 border border-white/10 rounded-xl px-3 py-2 text-xs text-white uppercase">
+                    <input type="text" id="admin-coupon-code" placeholder="كود الكوبون..." class="bg-black/60 border border-white/10 rounded-xl px-3 py-2 text-xs text-white uppercase">
                     <input type="number" id="admin-coupon-discount" placeholder="نسبة الخصم %" class="bg-black/60 border border-white/10 rounded-xl px-3 py-2 text-xs text-white">
                 </div>
                 <button onclick="saveAdminCoupon()" class="w-full bg-white text-black text-xs py-2.5 rounded-xl font-black cursor-pointer hover:bg-zinc-200 transition">حفظ وتفعيل الكوبون 🏷️</button>
             </div>
 
-            <!-- إعدادات الأمان وتغيير الرقم السري (PIN) -->
             <div class="vanilla-card p-4 rounded-2xl space-y-3">
                 <h4 class="font-bold text-white text-xs">🔒 أمان لوحة التحكم (تغيير الباسورد):</h4>
                 <div class="flex gap-2">
@@ -251,7 +238,6 @@
                 </div>
             </div>
 
-            <!-- إعدادات المظهر واللوجو وعروض -->
             <div class="vanilla-card p-4 rounded-2xl space-y-3">
                 <h4 class="font-bold text-white text-xs">🎨 إعدادات المظهر واللوجو والعروض:</h4>
                 <input type="text" id="admin-banner-text" placeholder="نص الشريط الإعلاني فوق..." class="w-full bg-black/60 border border-white/10 rounded-xl px-3 py-2 text-xs text-white">
@@ -259,7 +245,6 @@
                 <button onclick="saveThemeAndBannerSettings()" class="w-full bg-white text-black text-xs py-2.5 rounded-xl font-black cursor-pointer hover:bg-zinc-200 transition">حفظ المظهر والشريط 💾</button>
             </div>
 
-            <!-- إعدادات المتجر والدفع -->
             <div class="vanilla-card p-4 rounded-2xl space-y-3">
                 <h4 class="font-bold text-white text-xs">⚙️ إعدادات المتجر والدفع:</h4>
                 <input type="text" id="admin-whatsapp" placeholder="رقم واتساب الأوردرات..." class="w-full bg-black/60 border border-white/10 rounded-xl px-3 py-2 text-xs text-white">
@@ -272,7 +257,6 @@
                 <button onclick="saveStoreSettings()" class="w-full bg-white text-black text-xs py-2.5 rounded-xl font-black cursor-pointer hover:bg-zinc-200 transition">حفظ إعدادات الدفع 💾</button>
             </div>
 
-            <!-- مربعات السوشيال ميديا واللوكيشن -->
             <div class="vanilla-card p-4 rounded-2xl space-y-3">
                 <h4 class="font-bold text-white text-xs">🌐 مربعات السوشيال ميديا واللوكيشن:</h4>
                 <input type="text" id="social-fb" placeholder="رابط الفيسبوك..." class="w-full bg-black/60 border border-white/10 rounded-xl px-3 py-2 text-xs text-white">
@@ -284,7 +268,6 @@
                 <button onclick="saveSocialSettings()" class="w-full bg-white text-black text-xs py-2.5 rounded-xl font-black cursor-pointer hover:bg-zinc-200 transition">حفظ السوشيال واللوكيشن 📱</button>
             </div>
 
-            <!-- إضافة منتج جديد -->
             <div class="vanilla-card p-4 rounded-2xl space-y-3">
                 <h4 class="font-bold text-white text-xs">➕ إضافة منتج جديد (أو عرض):</h4>
                 <input type="text" id="p-name" placeholder="اسم المنتج..." class="w-full bg-black/60 border border-white/10 rounded-xl px-3 py-2 text-xs text-white">
@@ -295,13 +278,11 @@
                 <button onclick="addNewProductCloud()" class="w-full bg-white text-black text-xs py-2.5 rounded-xl font-black cursor-pointer hover:bg-zinc-200 transition">نشر المنتج سحابياً 🚀</button>
             </div>
 
-            <!-- إدارة كل الأصناف -->
             <div class="space-y-2 pt-2">
                 <h4 class="font-bold text-zinc-300 text-xs">📦 إدارة جميع أصناف المتجر (متاح / خلصان):</h4>
                 <div id="admin-products-list" class="space-y-2"></div>
             </div>
 
-            <!-- أوردرات العملاء الواردة سحابياً -->
             <div class="space-y-2 pt-4 border-t border-white/10">
                 <h4 class="font-bold text-zinc-300 text-xs">📋 أوردرات العملاء الواردة سحابياً (Real-time):</h4>
                 <div id="cloud-orders-list" class="space-y-2"></div>
@@ -345,7 +326,6 @@
         let promoText = localStorage.getItem('vanilla_promo') || "✨ Vanilla Store • Makeup & Accessories • أناقتك تبدأ من هنا 🤍";
         let storeLogo = localStorage.getItem('vanilla_logo') || "";
         
-        // كوبونات الخصم النشطة
         let activeCoupon = JSON.parse(localStorage.getItem('vanilla_active_coupon')) || { code: "VANILLA10", discount: 10 };
 
         let socialLinks = JSON.parse(localStorage.getItem('vanilla_socials')) || {
@@ -433,7 +413,7 @@
             if(!code || disc <= 0) { alert("أدخل كود صالح ونسبة خصم صحيحة!"); return; }
             activeCoupon = { code, discount: disc };
             localStorage.setItem('vanilla_active_coupon', JSON.stringify(activeCoupon));
-            alert(`تم حفظ وتفعيل الكوبون (${code}) بنجاح بقيمة خصم ${disc}%! 🎟️️`);
+            alert(`تم حفظ وتفعيل الكوبون (${code}) بنجاح بقيمة خصم ${disc}%! 🎟`);
         }
 
         function applyCoupon() {
@@ -563,7 +543,6 @@
             
             let filtered = products.filter(p => {
                 if(p.available === false) return false;
-                // فلترة البحث الفوري
                 if(searchQuery) {
                     return p.name.toLowerCase().includes(searchQuery) || p.category.toLowerCase().includes(searchQuery);
                 }
@@ -605,7 +584,6 @@
             });
         }
 
-        // المفضلة
         function toggleWishlist(id) {
             let p = products.find(item => item.id == id);
             let idx = wishlist.findIndex(item => item.id == id);
@@ -734,7 +712,7 @@
             });
 
             let finalTotal = appliedCouponDiscount > 0 ? Math.round(subtotal * (1 - appliedCouponDiscount / 100)) : subtotal;
-            totalEl.innerHTML = appliedCouponDiscount >  0 ? `<span class="line-through text-xs text-zinc-500 ml-2">${subtotal} ج.م</span> ${finalTotal} ج.م` : `${finalTotal} ج.م`;
+            totalEl.innerHTML = appliedCouponDiscount > 0 ? `<span class="line-through text-xs text-zinc-500 ml-2">${subtotal} ج.م</span> ${finalTotal} ج.م` : `${finalTotal} ج.م`;
         }
 
         async function sendOrderCloud() {
@@ -768,7 +746,7 @@
                 await db.collection("vanilla_orders").add(orderData);
 
                 let text = `🛍️ أوردر جديد من Vanilla Store:\n📌 رقم الأوردر: ${orderId}\n👤 العميلة: ${name}\n📞 الهاتف: ${phone}\n📍 العنوان: ${address}\n💳 طريقة الدفع: ${orderData.payment}\n`;
-                if(appliedCouponDiscount > 0) text += `🎟️ الكوبون المستخدم: ${activeCoupon.code} (خصم ${appliedCouponDiscount}%)\n`;
+                if(appliedCouponDiscount > 0) text += `🎟️️ الكوبون المستخدم: ${activeCoupon.code} (خصم ${appliedCouponDiscount}%)\n`;
                 text += `\nالمنتجات:\n`;
                 cart.forEach(i => { text += `- ${i.name} (عدد: ${i.qty}) | ${i.finalPrice * i.qty} ج.م\n`; });
                 text += `\n💰 الإجمالي الكلي: ${total} ج.م`;
@@ -783,7 +761,6 @@
             } catch (error) { alert("خطأ: " + error.message); }
         }
 
-        // جلب الأوردرات وحساب الإحصائيات
         function loadCloudOrdersRealtime() {
             let list = document.getElementById('cloud-orders-list');
             db.collection("vanilla_orders").orderBy("createdAt", "desc").onSnapshot(snapshot => {
@@ -841,19 +818,60 @@
             });
         }
 
-        // تصدير التقارير إلى Excel/CSV
-        function exportOrdersExcel() {
+        // تصدير التقارير إلى PDF احترافي
+        function exportOrdersPDF() {
             if(ordersDataCache.length === 0) { alert("لا توجد أوردرات لتصديرها!"); return; }
-            let csvContent = "\uFEFFرقم الأوردر,اسم العميل,الهاتف,العنوان,الإجمالي,طريقة الدفع,الحالة\n";
+            
+            document.getElementById('pdf-date-span').innerText = new Date().toLocaleDateString('ar-EG');
+            let tableContainer = document.getElementById('pdf-table-container');
+            
+            let html = `
+                <table style="width: 100%; border-collapse: collapse; font-size: 11px; text-align: right;">
+                    <thead>
+                        <tr style="background-color: #f3f3f3; border-bottom: 2px solid #000;">
+                            <th style="padding: 6px; border: 1px solid #ddd;">رقم الأوردر</th>
+                            <th style="padding: 6px; border: 1px solid #ddd;">العميل</th>
+                            <th style="padding: 6px; border: 1px solid #ddd;">الهاتف</th>
+                            <th style="padding: 6px; border: 1px solid #ddd;">العنوان</th>
+                            <th style="padding: 6px; border: 1px solid #ddd;">الإجمالي</th>
+                            <th style="padding: 6px; border: 1px solid #ddd;">الدفع</th>
+                            <th style="padding: 6px; border: 1px solid #ddd;">الحالة</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
             ordersDataCache.forEach(o => {
-                csvContent += `"${o.orderId}","${o.name}","${o.phone}","${o.address}","${o.total} ج.م","${o.payment}","${o.status}"\n`;
+                html += `
+                    <tr>
+                        <td style="padding: 6px; border: 1px solid #ddd;">${o.orderId}</td>
+                        <td style="padding: 6px; border: 1px solid #ddd;">${o.name}</td>
+                        <td style="padding: 6px; border: 1px solid #ddd;">${o.phone}</td>
+                        <td style="padding: 6px; border: 1px solid #ddd;">${o.address}</td>
+                        <td style="padding: 6px; border: 1px solid #ddd;">${o.total} ج.م</td>
+                        <td style="padding: 6px; border: 1px solid #ddd;">${o.payment}</td>
+                        <td style="padding: 6px; border: 1px solid #ddd;">${o.status}</td>
+                    </tr>
+                `;
             });
-            let blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            let url = URL.createObjectURL(blob);
-            let a = document.createElement('a');
-            a.href = url;
-            a.download = `Vanilla_Store_Orders_${new Date().toISOString().slice(0,10)}.csv`;
-            a.click();
+            
+            html += `</tbody></table>`;
+            tableContainer.innerHTML = html;
+            
+            let element = document.getElementById('pdf-report-content');
+            element.classList.remove('hidden');
+            
+            let opt = {
+                margin:       10,
+                filename:     `Vanilla_Store_Report_${new Date().toISOString().slice(0,10)}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2 },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+            
+            html2pdf().from(element).set(opt).save().then(() => {
+                element.classList.add('hidden');
+            });
         }
 
         function updateAnalyticsUI(sales, orders, delivered, pending) {
