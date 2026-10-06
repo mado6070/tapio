@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>معاينة الاستاند الذكي - الوزير ستور</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Tajawal', 'Segoe UI', Tahoma, sans-serif;
+        }
+
+        body {
+            background: radial-gradient(circle at center, #141412 0%, #050504 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        h2 {
+            color: #d4af37;
+            margin-bottom: 25px;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+        }
+
+        /* تصميم شكل الاستاند الحقيقي (مع مجسم يشبه الاستاند الاكريليك) */
+        .stand-container {
+            width: 320px;
+            background: linear-gradient(135deg, #1c1c1a 0%, #0d0d0c 100%);
+            border: 2px solid #d4af37;
+            border-radius: 24px;
+            padding: 25px 20px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.9), 0 0 25px rgba(212,175,55,0.15);
+            overflow: hidden;
+        }
+
+        /* إضاءة خلفية جمالية للاستاند */
+        .stand-container::before {
+            content: '';
+            position: absolute;
+            top: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 180px;
+            height: 180px;
+            background: radial-gradient(circle, rgba(212,175,55,0.2) 0%, transparent 70%);
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        /* صورة واجهة المحل مصغرة داخل الاستاند */
+        .stand-banner-box {
+            width: 100%;
+            height: 110px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 2;
+            background: #000;
+        }
+
+        .stand-banner {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* اللوجو والعنوان */
+        .stand-header {
+            position: relative;
+            z-index: 2;
+            margin-bottom: 15px;
+        }
+
+        .stand-title {
+            font-size: 1.4rem;
+            color: #fff;
+            font-weight: 800;
+            margin-bottom: 2px;
+        }
+
+        .stand-subtitle {
+            font-size: 0.8rem;
+            color: #d4af37;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        /* دعوة للعمل (Call to action) */
+        .stand-action-text {
+            background: rgba(212, 175, 55, 0.08);
+            border: 1px dashed rgba(212, 175, 55, 0.4);
+            border-radius: 12px;
+            padding: 8px;
+            font-size: 0.85rem;
+            color: #fef08a;
+            margin-bottom: 15px;
+            font-weight: 600;
+            z-index: 2;
+            position: relative;
+        }
+
+        /* إطار QR Code الكبير والواضح */
+        .stand-qr-box {
+            width: 160px;
+            height: 160px;
+            background: #fff;
+            padding: 8px;
+            border-radius: 14px;
+            margin: 0 auto 15px;
+            border: 2px solid #d4af37;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+            position: relative;
+            z-index: 2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .stand-qr-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* أيقونة NFC في الأسفل */
+        .stand-nfc-footer {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: #d4af37;
+            font-weight: 600;
+            z-index: 2;
+            position: relative;
+            margin-bottom: 10px;
+        }
+
+        .brand-footer {
+            font-size: 0.7rem;
+            color: #777;
+            z-index: 2;
+            position: relative;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            padding-top: 10px;
+        }
+        .brand-footer span {
+            color: #d4af37;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>✨ تصميم الاستاند الذكي (NFC & QR Stand) ✨</h2>
+
+    <div class="stand-container">
+        <!-- بنر واجهة المحل المصغر في الاستاند -->
+        <div class="stand-banner-box">
+            <img src="store_front.jpg" alt="واجهة الوزير ستور" class="stand-banner" onerror="this.src='https://via.placeholder.com/280x110?text=Store+Front'">
+        </div>
+
+        <div class="stand-header">
+            <div class="stand-title">الوزير ستور</div>
+            <div class="stand-subtitle">ثقة - أمان - توفير</div>
+        </div>
+
+        <div class="stand-action-text">
+            📱 تقرّب هاتفك أو امسح الكود لفتح موقعنا والدفع السريع
+        </div>
+
+        <!-- QR Code الخاص بالموقع -->
+        <div class="stand-qr-box">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://mado6070.github.io/tapio/" alt="QR Code">
+        </div>
+
+        <!-- علامة NFC -->
+        <div class="stand-nfc-footer">
+            <i class="fa-solid fa-wifi" style="transform: rotate(90deg);"></i>
+            <span>تلامس NFC ذكي</span>
+        </div>
+
+        <div class="brand-footer">
+            Powered by <span>tapio</span> &copy; 2026
+        </div>
+    </div>
+
+</body>
+</html>
